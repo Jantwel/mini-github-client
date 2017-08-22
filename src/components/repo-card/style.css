@@ -1,0 +1,12 @@
+.card {
+	padding: 20px 0;
+	border-bottom: 1px solid #ddd;
+}
+
+.name {
+	color: #0366d6;
+}
+
+.additionalInfo {
+	/*display: flex;*/
+}
