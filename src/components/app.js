@@ -1,8 +1,10 @@
 import { h, Component } from 'preact';
-import { Router } from 'preact-router';
+// import { Router } from 'preact-router';
 
 import Header from './header';
-import Home from '../routes/home';
+// import Home from '../routes/home';
+import SubmitForm from '../components/submit-form';
+import RepoStream from '../components/repo-stream';
 import { githubLinksParser } from '../util';
 // import Home from 'async!./home';
 // import Profile from 'async!./profile';
@@ -39,9 +41,16 @@ export default class App extends Component {
 		return (
 			<div id="app">
 				<Header />
-				<Router onChange={this.handleRoute}>
+				<div>
+					<h1>Home</h1>
+					<p>This is the Home component.</p>
+					<SubmitForm getRepos={this.getRepos} />
+					<RepoStream repos={repos} />
+				</div>
+				{/* <Home path="/" getRepos={this.getRepos} repos={repos} /> */}
+				{/* <Router onChange={this.handleRoute}>
 					<Home path="/" getRepos={this.getRepos} repos={repos} />
-				</Router>
+				</Router> */}
 			</div>
 		);
 	}
