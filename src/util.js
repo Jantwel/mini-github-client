@@ -1,9 +1,3 @@
-import { bindActionCreators } from 'redux';
-
-export const bindActions = actions => dispatch => ({
-	...bindActionCreators(actions, dispatch)
-});
-
 export const githubLinksParser = linkStr =>
 	linkStr
 		.split(',')
