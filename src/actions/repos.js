@@ -17,8 +17,6 @@ export const getRepos = (name, page) => dispatch =>
 
 			return Promise.all([response.json(), lastPage]);
 		})
-		.then(([json, lastPage]) => {
-			const { items } = json;
-			console.log('success: ', items, json);
-			dispatch(getReposSuccess({ repos: items, lastPage }));
+		.then(([{ items: repos }, lastPage]) => {
+			dispatch(getReposSuccess({ repos, lastPage }));
 		});
