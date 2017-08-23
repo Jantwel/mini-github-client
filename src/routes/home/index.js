@@ -1,5 +1,4 @@
 import { h, Component } from 'preact';
-import { connect } from 'preact-redux';
 import SubmitForm from '../../components/submit-form';
 import RepoStream from '../../components/repo-stream';
 import style from './style';

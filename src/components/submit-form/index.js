@@ -1,10 +1,5 @@
 import { h, Component } from 'preact';
-import { connect } from 'preact-redux';
-import { bindActions } from '../../util';
-import reducers from '../../reducers';
-import * as actions from '../../actions';
 
-// @connect(reducers, bindActions(actions))
 export default class SubmitForm extends Component {
 	state = {
 		value: ''
