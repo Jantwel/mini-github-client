@@ -5,6 +5,7 @@ import Header from './header';
 // import Home from '../routes/home';
 import SubmitForm from '../components/submit-form';
 import RepoStream from '../components/repo-stream';
+import Dialog from '../components/dialog';
 import { githubLinksParser } from '../util';
 // import Home from 'async!./home';
 // import Profile from 'async!./profile';
@@ -36,8 +37,15 @@ export default class App extends Component {
 				this.setState({ repos, lastPage });
 			});
 
+	openRepo = ({ id }) => {
+		this.setState({ dialogOpened: true, openedRepoId: id });
+	};
+
+	closeRepo = () => this.setState({ openedRepoId: null });
+
 	render() {
-		const { repos } = this.state;
+		const { repos, openedRepoId } = this.state;
+		console.log('app props: ', this.state);
 		return (
 			<div id="app">
 				<Header />
@@ -45,7 +53,12 @@ export default class App extends Component {
 					<h1>Home</h1>
 					<p>This is the Home component.</p>
 					<SubmitForm getRepos={this.getRepos} />
-					<RepoStream repos={repos} />
+					<RepoStream repos={repos} openRepo={this.openRepo} />
+					{openedRepoId &&
+						<Dialog
+							repo={repos.find(({ id }) => id === openedRepoId)}
+							closeRepo={this.closeRepo}
+						/>}
 				</div>
 				{/* <Home path="/" getRepos={this.getRepos} repos={repos} /> */}
 				{/* <Router onChange={this.handleRoute}>

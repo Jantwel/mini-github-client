@@ -7,14 +7,21 @@ export default class RepoCard extends Component {
 	};
 
 	render() {
-		const { name, description, stars, updatedAt, language } = this.props;
+		const {
+			id,
+			name,
+			description,
+			stars,
+			updatedAt,
+			language,
+			openRepo
+		} = this.props;
 		return (
 			<div
 				class={css.card}
 				ref={ref => (this.card = ref)}
-				onClick={this.handleClick}
 			>
-				<h3 class={css.name}>
+				<h3 class={css.name} onClick={() => openRepo({ id })}>
 					{name}
 				</h3>
 				<p>

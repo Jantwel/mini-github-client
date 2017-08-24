@@ -2,7 +2,7 @@ import { h, Component } from 'preact';
 
 export default class SubmitForm extends Component {
 	state = {
-		value: ''
+		value: 'facebook'
 	};
 
 	getRepos = event => {
