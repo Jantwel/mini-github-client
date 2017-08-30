@@ -1,5 +1,5 @@
 import { h, Component } from 'preact';
-import css from './style';
+import css from './style.css';
 
 const getData = url => fetch(url).then(response => response.json());
 

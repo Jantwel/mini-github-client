@@ -1,5 +1,5 @@
 import { h, Component } from 'preact';
-import css from './style';
+import css from './style.css';
 
 export default class RepoCard extends Component {
 	handleClick = event => {

@@ -7,7 +7,7 @@ export const githubLinksParser = linkStr =>
 				if (idx === 1) return /rel="(.+)"/.exec(curr)[1];
 			})
 		)
-		.reduce((obj, curr, i) => {
+		.reduce((obj, curr) => {
 			obj[curr[1]] = curr[0];
 			return obj;
 		}, {});
