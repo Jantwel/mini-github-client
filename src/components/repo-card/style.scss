@@ -5,6 +5,11 @@
 
 .name {
 	color: #0366d6;
+
+	&:hover {
+		text-decoration: underline;
+		cursor: pointer;
+	}
 }
 
 .additionalInfo {

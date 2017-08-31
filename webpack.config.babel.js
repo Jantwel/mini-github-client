@@ -1,20 +1,20 @@
-import webpack from 'webpack';
-import ExtractTextPlugin from 'extract-text-webpack-plugin';
-import HtmlWebpackPlugin from 'html-webpack-plugin';
-import autoprefixer from 'autoprefixer';
-import CopyWebpackPlugin from 'copy-webpack-plugin';
-import OfflinePlugin from 'offline-plugin';
-import path from 'path';
-const ENV = process.env.NODE_ENV || 'development';
+import webpack from 'webpack'
+import ExtractTextPlugin from 'extract-text-webpack-plugin'
+import HtmlWebpackPlugin from 'html-webpack-plugin'
+import autoprefixer from 'autoprefixer'
+import CopyWebpackPlugin from 'copy-webpack-plugin'
+import OfflinePlugin from 'offline-plugin'
+import path from 'path'
+const ENV = process.env.NODE_ENV || 'development'
 
-const CSS_MAPS = ENV!=='production';
+const CSS_MAPS = ENV !== 'production'
 
 module.exports = {
-	context: path.resolve(__dirname, "src"),
+	context: path.resolve(__dirname, 'src'),
 	entry: './index.js',
 
 	output: {
-		path: path.resolve(__dirname, "docs"),
+		path: path.resolve(__dirname, 'docs'),
 		publicPath: '/',
 		filename: 'bundle.js'
 	},
@@ -22,14 +22,14 @@ module.exports = {
 	resolve: {
 		extensions: ['.jsx', '.js', '.json', '.sass', '.scss'],
 		modules: [
-			path.resolve(__dirname, "src/lib"),
-			path.resolve(__dirname, "node_modules"),
+			path.resolve(__dirname, 'src/lib'),
+			path.resolve(__dirname, 'node_modules'),
 			'node_modules'
 		],
 		alias: {
-			components: path.resolve(__dirname, "src/components"),    // used for tests
-			style: path.resolve(__dirname, "src/style"),
-			'react': 'preact-compat',
+			components: path.resolve(__dirname, 'src/components'), // used for tests
+			style: path.resolve(__dirname, 'src/style'),
+			react: 'preact-compat',
 			'react-dom': 'preact-compat'
 		}
 	},
@@ -58,11 +58,17 @@ module.exports = {
 							options: { modules: true, sourceMap: CSS_MAPS, importLoaders: 1 }
 						},
 						{
-							loader: `postcss-loader`,
+							loader: 'sass-loader',
+							options: {
+								sourceMap: true
+							}
+						},
+						{
+							loader: 'postcss-loader',
 							options: {
 								sourceMap: CSS_MAPS,
 								plugins: () => {
-									autoprefixer({ browsers: [ 'last 2 versions' ] });
+									autoprefixer({ browsers: ['last 2 versions'] })
 								}
 							}
 						}
@@ -79,11 +85,11 @@ module.exports = {
 			},
 			{
 				test: /\.(svg|woff2?|ttf|eot|jpe?g|png|gif)(\?.*)?$/i,
-				use: ENV==='production' ? 'file-loader' : 'url-loader'
+				use: ENV === 'production' ? 'file-loader' : 'url-loader'
 			}
 		]
 	},
-	plugins: ([
+	plugins: [
 		new webpack.NoEmitOnErrorsPlugin(),
 		new ExtractTextPlugin({
 			filename: 'style.css',
@@ -117,37 +123,41 @@ module.exports = {
 			],
 			publicPath: '/'
 		})
-	]).concat(ENV==='production' ? [
-		new webpack.optimize.UglifyJsPlugin({
-			output: {
-				comments: false
-			},
-			compress: {
-				unsafe_comps: true,
-				properties: true,
-				keep_fargs: false,
-				pure_getters: true,
-				collapse_vars: true,
-				unsafe: true,
-				warnings: false,
-				screw_ie8: true,
-				sequences: true,
-				dead_code: true,
-				drop_debugger: true,
-				comparisons: true,
-				conditionals: true,
-				evaluate: true,
-				booleans: true,
-				loops: true,
-				unused: true,
-				hoist_funs: true,
-				if_return: true,
-				join_vars: true,
-				cascade: true,
-				drop_console: true
-			}
-		})
-	] : []),
+	].concat(
+		ENV === 'production'
+			? [
+				new webpack.optimize.UglifyJsPlugin({
+					output: {
+						comments: false
+					},
+					compress: {
+						unsafe_comps: true,
+						properties: true,
+						keep_fargs: false,
+						pure_getters: true,
+						collapse_vars: true,
+						unsafe: true,
+						warnings: false,
+						screw_ie8: true,
+						sequences: true,
+						dead_code: true,
+						drop_debugger: true,
+						comparisons: true,
+						conditionals: true,
+						evaluate: true,
+						booleans: true,
+						loops: true,
+						unused: true,
+						hoist_funs: true,
+						if_return: true,
+						join_vars: true,
+						cascade: true,
+						drop_console: true
+					}
+				})
+			]
+			: []
+	),
 
 	stats: { colors: true },
 
@@ -160,7 +170,7 @@ module.exports = {
 		setImmediate: false
 	},
 
-	devtool: ENV==='production' ? 'source-map' : 'cheap-module-eval-source-map',
+	devtool: ENV === 'production' ? 'source-map' : 'cheap-module-eval-source-map',
 
 	devServer: {
 		port: process.env.PORT || 8050,
@@ -178,4 +188,4 @@ module.exports = {
 			// }
 		}
 	}
-};
+}

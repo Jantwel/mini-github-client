@@ -24,6 +24,7 @@
     }
   },
   "globals": {
+    "_": false,
     "sleep": 1
   },
   "rules": {
@@ -47,7 +48,9 @@
     "no-console": 0,
     "no-empty-pattern": 0,
     "no-cond-assign": 1,
-    "semi": 2,
+    "quotes": [1, "single"],
+    "quote-props": "off",
+    "semi": ["error", "never"],
     "camelcase": 0,
     "comma-style": 2,
     "comma-dangle": [2, "never"],

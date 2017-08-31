@@ -1,10 +1,11 @@
-import { h, Component } from 'preact';
-import css from './style.css';
+import { h, Component } from 'preact'
+import css from './style.scss'
 
 export default class RepoCard extends Component {
-	handleClick = event => {
-		console.log('click event: ', event);
-	};
+	openRepo = id => event => {
+		event.preventDefault()
+		this.props.openRepo({ id })
+	}
 
 	render() {
 		const {
@@ -14,16 +15,17 @@ export default class RepoCard extends Component {
 			stars,
 			updatedAt,
 			language,
-			openRepo
-		} = this.props;
+			fork
+		} = this.props
 		return (
-			<div
-				class={css.card}
-				ref={ref => (this.card = ref)}
-			>
-				<h3 class={css.name} onClick={() => openRepo({ id })}>
+			<div class={css.card} ref={ref => (this.card = ref)}>
+				<h3 class={css.name} onClick={this.openRepo(id)}>
 					{name}
 				</h3>
+				{fork &&
+					<div>
+						<small>Fork</small>
+					</div>}
 				<p>
 					{description}
 				</p>
@@ -53,6 +55,6 @@ export default class RepoCard extends Component {
 					</div>
 				</div>
 			</div>
-		);
+		)
 	}
 }
