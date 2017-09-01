@@ -9,28 +9,14 @@ import SubmitForm from '../components/submit-form'
 import RepoStream from '../components/repo-stream'
 import Dialog from '../components/dialog'
 import { githubLinksParser, pickBy } from '../util'
+import INITIAL_STATE from './initial-state'
 import css from './style.css'
 // import Home from 'async!./home';
 // import Profile from 'async!./profile';
 const SEARCH = '//api.github.com/users'
 
 export default class App extends Component {
-  state = {
-    repos: [],
-    languages: [],
-    filters: {
-      hasOpenIssues: false,
-      hasTopics: false,
-      stars: 0,
-      updated: '',
-      language: '',
-      type: 'all'
-    },
-    sorting: {
-      by: 'full_name',
-      order: 'desc'
-    }
-  }
+  state = INITIAL_STATE
 
   /** Gets fired when the route changes.
 	 *	@param {Object} event		"change" event from [preact-router](http://git.io/preact-router)
@@ -40,8 +26,9 @@ export default class App extends Component {
     this.currentUrl = e.url
   }
 
-  getRepos = name =>
-    fetch(`${SEARCH}/${name}/repos`, {
+  getRepos = (name = this.state.username, page = this.state.currentPage) => {
+    this.setState({ loading: true })
+    fetch(`${SEARCH}/${name}/repos?page=${page}&per_page=60`, {
       headers: new Headers({
         Accept: 'application/vnd.github.mercy-preview+json'
       })
@@ -54,8 +41,36 @@ export default class App extends Component {
         return Promise.all([response.json(), lastPage])
       })
       .then(([repos, lastPage]) => {
-        this.setState({ repos, lastPage, languages: this.getLanguages(repos) })
+        if (!this.state.lastPage && lastPage > 1) {
+          this.scrollListener = document.addEventListener(
+            'scroll',
+            this.handleLoadRepos
+          )
+        }
+
+        this.setState({
+          username: name,
+          repos: [...this.state.repos, ...repos],
+          lastPage,
+          currentPage: page,
+          loading: false,
+          languages: this.getLanguages(repos)
+        })
       })
+  }
+
+  handleLoadRepos = event => {
+    const { username, currentPage, loading, lastPage } = this.state
+    const scrollHeight = event.target.documentElement.scrollHeight
+
+    if (
+      scrollHeight - (window.scrollY + window.innerHeight) < 200 &&
+      currentPage < lastPage &&
+      !loading
+    ) {
+      this.getRepos(username, currentPage + 1)
+    }
+  }
 
   openRepo = ({ id }) => this.setState({ dialogOpened: true, openedRepoId: id })
 
