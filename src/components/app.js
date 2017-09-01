@@ -8,7 +8,8 @@ import SortPanel from './sort-panel'
 import SubmitForm from '../components/submit-form'
 import RepoStream from '../components/repo-stream'
 import Dialog from '../components/dialog'
-import { githubLinksParser, pickBy } from '../util'
+import request from '../services/request'
+import { githubLinksParser, pickBy, createFilters } from '../util'
 import INITIAL_STATE from './initial-state'
 import css from './style.css'
 // import Home from 'async!./home';
@@ -26,37 +27,32 @@ export default class App extends Component {
     this.currentUrl = e.url
   }
 
-  getRepos = (name = this.state.username, page = this.state.currentPage) => {
+  getRepos = async (
+    name = this.state.username,
+    page = this.state.currentPage
+  ) => {
     this.setState({ loading: true })
-    fetch(`${SEARCH}/${name}/repos?page=${page}&per_page=60`, {
-      headers: new Headers({
-        Accept: 'application/vnd.github.mercy-preview+json'
-      })
+
+    const { body: repos, headers } = await request(
+      `${SEARCH}/${name}/repos?page=${page}&per_page=60`
+    )
+    const lastPage = headers.Link ? githubLinksParser(headers.Link).last : 1
+    console.log('getRepos: ', { repos, headers })
+    if (!this.state.lastPage && lastPage > 1) {
+      this.scrollListener = document.addEventListener(
+        'scroll',
+        this.handleLoadRepos
+      )
+    }
+
+    this.setState({
+      username: name,
+      repos: [...this.state.repos, ...repos],
+      lastPage,
+      currentPage: page,
+      loading: false,
+      languages: this.getLanguages(repos)
     })
-      .then(response => {
-        const lastPage = response.headers.get('Link')
-          ? githubLinksParser(response.headers.get('Link')).last
-          : 1
-
-        return Promise.all([response.json(), lastPage])
-      })
-      .then(([repos, lastPage]) => {
-        if (!this.state.lastPage && lastPage > 1) {
-          this.scrollListener = document.addEventListener(
-            'scroll',
-            this.handleLoadRepos
-          )
-        }
-
-        this.setState({
-          username: name,
-          repos: [...this.state.repos, ...repos],
-          lastPage,
-          currentPage: page,
-          loading: false,
-          languages: this.getLanguages(repos)
-        })
-      })
   }
 
   handleLoadRepos = event => {
@@ -85,37 +81,13 @@ export default class App extends Component {
     }, [])
   }
 
-  filterRepo = ({
-    open_issues_count,
-    topics,
-    stargazers_count,
-    pushed_at,
-    language,
-    fork
-  }) => {
-    const filters = {
-      hasOpenIssues: () => open_issues_count,
-      hasTopics: () => topics.length,
-      stars: value => stargazers_count >= value,
-      updated: value => new Date(pushed_at) > new Date(value),
-      language: value => {
-        if (value === 'all') {
-          return true
-        }
-        return language === value
-      },
-      type: value => {
-        if (value === 'all') {
-          return true
-        }
-        const isFork = value === 'forks'
-        return isFork === fork
-      }
-    }
-
-    return Object.keys(pickBy(this.state.filters, value => value)).every(key =>
-      filters[key](this.state.filters[key])
+  filterRepo = repo => {
+    const filters = createFilters(repo)
+    const pickedFilters = Object.keys(
+      pickBy(this.state.filters, value => value)
     )
+
+    return pickedFilters.every(key => filters[key](this.state.filters[key]))
   }
 
   changeFilter = ({ type, value }) => {

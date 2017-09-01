@@ -20,3 +20,33 @@ export const pickBy = (obj, pick) => {
     return res
   }, {})
 }
+
+/** Create filters with data from a repository.
+ *	@param {Object} repository
+ */
+export const createFilters = ({
+  open_issues_count,
+  topics,
+  stargazers_count,
+  pushed_at,
+  language,
+  fork
+}) => ({
+  hasOpenIssues: () => open_issues_count,
+  hasTopics: () => topics.length,
+  stars: value => stargazers_count >= value,
+  updated: value => new Date(pushed_at) > new Date(value),
+  language: value => {
+    if (value === 'all') {
+      return true
+    }
+    return language === value
+  },
+  type: value => {
+    if (value === 'all') {
+      return true
+    }
+    const isFork = value === 'forks'
+    return isFork === fork
+  }
+})
