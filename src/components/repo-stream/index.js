@@ -2,7 +2,7 @@ import { h, Component } from 'preact'
 import RepoCard from '../../components/repo-card'
 
 export default class RepoStream extends Component {
-  render({ repos, openRepo, closeRepo }) {
+  render({ repos, closeRepo }) {
     return (
       <div ref={ref => (this.stream = ref)}>
         <h2>Stream</h2>
@@ -27,7 +27,6 @@ export default class RepoStream extends Component {
                 language,
                 fork,
                 topics,
-                openRepo,
                 closeRepo
               }}
             />

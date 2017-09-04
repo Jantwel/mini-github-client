@@ -18,16 +18,6 @@ const SEARCH = '//api.github.com/users'
 export default class App extends Component {
   state = INITIAL_STATE
 
-  /** Gets fired when the route changes.
-	 *	@param {Object} event		"change" event from [preact-router](http://git.io/preact-router)
-	 *	@param {string} event.url	The newly routed URL
-	 */
-  handleRoute = event => {
-    const { current: { attributes: { matches: { name, repoName } } } } = event
-    console.log('route change', event)
-    name.trim() && !repoName && this.getRepos(name)
-  }
-
   getRepos = async (
     name = this.state.username,
     page = this.state.currentPage
@@ -48,7 +38,7 @@ export default class App extends Component {
 
     this.setState({
       username: name,
-      repos: [...this.state.repos, ...repos],
+      repos: page === 1 ? repos : [...this.state.repos, ...repos],
       lastPage,
       currentPage: page,
       loading: false,
@@ -118,14 +108,14 @@ export default class App extends Component {
             changeFilter={this.changeFilter}
           />
           <SortPanel sorting={sorting} changeSorting={this.changeSorting} />
-          {openedRepoId &&
-            <Dialog
-              repo={repos.find(({ id }) => id === openedRepoId)}
-              closeRepo={this.closeRepo}
-            />}
         </div>
         <Router onChange={this.handleRoute}>
-          <Home path="/:name" repos={filteredRepos} filters={filters} />
+          <Home
+            path="/:name"
+            repos={filteredRepos}
+            filters={filters}
+            fetchRepos={this.getRepos}
+          />
           <Dialog path="/:name/:repoName" closeRepo={this.closeRepo} />
         </Router>
       </div>

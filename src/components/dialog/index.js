@@ -12,6 +12,7 @@ export default class Dialog extends Component {
   closeDialog = event => this.props.closeRepo(this.props.repo.id)
 
   fetchRepo = async () => {
+    console.log('fetch repos: ', this.props)
     const { matches: { name, repoName } } = this.props
     const { body } = await request(`//api.github.com/repos/${name}/${repoName}`)
     this.getInfo(body)

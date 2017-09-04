@@ -3,11 +3,6 @@ import { Link } from 'preact-router'
 import css from './style.scss'
 
 export default class RepoCard extends Component {
-  openRepo = ({ id, name }) => event => {
-    event.preventDefault()
-    this.props.openRepo({ id, name })
-  }
-
   render() {
     const {
       id,
