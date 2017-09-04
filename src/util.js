@@ -32,10 +32,10 @@ export const createFilters = ({
   language,
   fork
 }) => ({
-  hasOpenIssues: () => open_issues_count,
-  hasTopics: () => topics.length,
-  stars: value => stargazers_count >= value,
-  updated: value => new Date(pushed_at) > new Date(value),
+  has_open_issues: () => open_issues_count,
+  has_topics: () => topics.length,
+  starred_gt: value => stargazers_count >= value,
+  updated_at: value => new Date(pushed_at) > new Date(value),
   language: value => {
     if (value === 'all') {
       return true

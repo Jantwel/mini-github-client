@@ -5,12 +5,19 @@ import RepoStream from '../../components/repo-stream'
 export default class Home extends Component {
   componentWillMount() {
     const { matches: { name }, fetchRepos } = this.props
-    fetchRepos(name)
+    name && fetchRepos(name)
   }
 
-  componentWillReceiveProps({ matches: { name: nextName } }) {
+  componentWillReceiveProps(nextProps) {
+    const { matches: { name: nextName } } = nextProps
     const { matches: { name }, fetchRepos } = this.props
-    if (name !== nextName) {
+    // console.log('will receive props: ', {
+    //   nextName,
+    //   name,
+    //   props: this.props,
+    //   nextProps
+    // })
+    if (name !== nextName && nextName.trim()) {
       fetchRepos(nextName)
     }
   }

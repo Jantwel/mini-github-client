@@ -4,10 +4,10 @@ export default {
   languages: [],
   currentPage: 1,
   filters: {
-    hasOpenIssues: false,
-    hasTopics: false,
-    stars: 0,
-    updated: '',
+    has_open_issues: false,
+    has_topics: false,
+    starred_gt: 0,
+    updated_at: '',
     language: '',
     type: 'all'
   },

@@ -31,8 +31,8 @@ export default class FilterPanel extends Component {
             <input
               type="checkbox"
               id="hasOpenIssues"
-              checked={filters.hasOpenIssues}
-              onClick={this.changeFilter('hasOpenIssues')}
+              checked={filters.has_open_issues}
+              onClick={this.changeFilter('has_open_issues')}
               name="issues"
               value="issues"
             />
@@ -42,8 +42,8 @@ export default class FilterPanel extends Component {
             <input
               type="checkbox"
               id="hasTopics"
-              checked={filters.hasTopics}
-              onClick={this.changeFilter('hasTopics')}
+              checked={filters.has_topics}
+              onClick={this.changeFilter('has_topics')}
               name="topics"
               value="topics"
             />
@@ -53,8 +53,8 @@ export default class FilterPanel extends Component {
             <input
               type="number"
               id="stars"
-              value={filters.stars}
-              onChange={this.changeStars('stars')}
+              value={filters.starred_gt}
+              onChange={this.changeStars('starred_gt')}
             />
             <label for="stars">Stars</label>
           </div>
@@ -62,8 +62,8 @@ export default class FilterPanel extends Component {
             <input
               type="date"
               id="lastUpdated"
-              value={filters.updated}
-              onChange={this.changeDate('updated')}
+              value={filters.updated_at}
+              onChange={this.changeDate('updated_at')}
             />
             <label for="lastUpdated">Updated</label>
           </div>

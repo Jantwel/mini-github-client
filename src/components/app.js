@@ -18,6 +18,11 @@ const SEARCH = '//api.github.com/users'
 export default class App extends Component {
   state = INITIAL_STATE
 
+  handleRoute = event => {
+    console.log('change route', event)
+    this.checkFilters()
+  }
+
   getFromStorage = name => {
     if (!JSON.parse(sessionStorage.getItem(`repos:${name}`))) {
       return null
@@ -91,8 +96,17 @@ export default class App extends Component {
     return pickedFilters.every(key => filters[key](this.state.filters[key]))
   }
 
-  changeFilter = ({ type, value }) =>
+  changeFilter = ({ type, value }) => {
+    const search = location.search || '?'
+    // this.checkFilters()
+    route(`${search}&${type}`)
     this.setState({ filters: { ...this.state.filters, [type]: value } })
+  }
+
+  checkFilters = () => {
+    const searchParams = new URL(location.href).searchParams
+    console.log('searchParams: ', searchParams.has('some'))
+  }
 
   changeSorting = sorting => this.setState({ sorting })
 
@@ -124,7 +138,7 @@ export default class App extends Component {
         </div>
         <Router onChange={this.handleRoute}>
           <Home
-            path="/:name"
+            path="/:name?"
             repos={filteredRepos}
             filters={filters}
             fetchRepos={this.fetchRepos}
