@@ -54,7 +54,7 @@ export const createFilters = ({
 })
 
 
-export const buildSearchUrl = (type, value) => {
+export const buildFiltersUrl = (type, value) => {
   const url = new URL(location.href)
   const params = url.searchParams
   const filters = {

@@ -6,7 +6,7 @@ import SortPanel from './sort-panel'
 import SubmitForm from '../components/submit-form'
 import Dialog from '../components/dialog'
 import request from '../services/request'
-import { githubLinksParser, pickBy, createFilters, buildSearchUrl } from '../util'
+import { githubLinksParser, pickBy, createFilters, buildFiltersUrl } from '../util'
 import INITIAL_STATE, {FILTERS} from './initial-state'
 import css from './style.css'
 import Home from '../routes/home'
@@ -18,6 +18,7 @@ export default class App extends Component {
   handleRoute = event => {
     console.log('change route', event)
     this.syncFilters(event.current)
+    this.syncSorting(event.current)
   }
 
   syncFilters = (event) => {
@@ -34,6 +35,16 @@ export default class App extends Component {
         return {...result, [type]: filtersProps[type](type)}
       }, {})
       this.setState({filters: {...this.state.filters, ...filters}})
+    }
+  }
+
+  syncSorting = (event) => {
+    if (event) {
+      const {
+        sorting: by = INITIAL_STATE.sorting.by,
+        order = INITIAL_STATE.sorting.order
+      } = event.attributes
+      this.setState({sorting: { by, order}})
     }
   }
 
@@ -111,11 +122,17 @@ export default class App extends Component {
   }
 
   changeFilter = ({ type, value }) => {
-    const url = buildSearchUrl(type, value)
+    const url = buildFiltersUrl(type, value)
     route(url.pathname + url.search)
   }
 
-  changeSorting = sorting => this.setState({ sorting })
+  changeSorting = sorting => {
+    const url = new URL(location.href)
+    const params = url.searchParams
+    sorting.by !== this.state.sorting.by && params.set('sorting', sorting.by)
+    sorting.order !== this.state.sorting.order && params.set('order', sorting.order)
+    route(url.pathname + url.search)
+  }
 
   sortRepo = (prev, next) => {
     const { sorting } = this.state
