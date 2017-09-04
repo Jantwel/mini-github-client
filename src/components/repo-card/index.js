@@ -1,10 +1,11 @@
 import { h, Component } from 'preact'
+import { Link } from 'preact-router'
 import css from './style.scss'
 
 export default class RepoCard extends Component {
-  openRepo = id => event => {
+  openRepo = ({ id, name }) => event => {
     event.preventDefault()
-    this.props.openRepo({ id })
+    this.props.openRepo({ id, name })
   }
 
   render() {
@@ -19,9 +20,9 @@ export default class RepoCard extends Component {
     } = this.props
     return (
       <div class={css.card} ref={ref => (this.card = ref)}>
-        <h3 class={css.name} onClick={this.openRepo(id)}>
+        <Link class={css.name} href={`/${name}`}>
           {name}
-        </h3>
+        </Link>
         {fork &&
           <div>
             <small>Fork</small>

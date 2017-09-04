@@ -6,7 +6,6 @@ import Header from './header'
 import FilterPanel from './filter-panel'
 import SortPanel from './sort-panel'
 import SubmitForm from '../components/submit-form'
-import RepoStream from '../components/repo-stream'
 import Dialog from '../components/dialog'
 import request from '../services/request'
 import { githubLinksParser, pickBy, createFilters } from '../util'
@@ -23,9 +22,10 @@ export default class App extends Component {
 	 *	@param {Object} event		"change" event from [preact-router](http://git.io/preact-router)
 	 *	@param {string} event.url	The newly routed URL
 	 */
-  handleRoute = route => {
-    const { current: { attributes: { matches: { name } } } } = route
-    name.trim() && this.getRepos(name)
+  handleRoute = event => {
+    const { current: { attributes: { matches: { name, repoName } } } } = event
+    console.log('route change', event)
+    name.trim() && !repoName && this.getRepos(name)
   }
 
   getRepos = async (
@@ -68,8 +68,6 @@ export default class App extends Component {
       this.getRepos(username, currentPage + 1)
     }
   }
-
-  openRepo = ({ id }) => this.setState({ dialogOpened: true, openedRepoId: id })
 
   closeRepo = () => this.setState({ openedRepoId: null })
 
@@ -127,12 +125,8 @@ export default class App extends Component {
             />}
         </div>
         <Router onChange={this.handleRoute}>
-          <Home
-            path="/:name?"
-            openRepo={this.openRepo}
-            repos={filteredRepos}
-            filters={filters}
-          />
+          <Home path="/:name" repos={filteredRepos} filters={filters} />
+          <Dialog path="/:name/:repoName" closeRepo={this.closeRepo} />
         </Router>
       </div>
     )
