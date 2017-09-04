@@ -1,6 +1,7 @@
 import { h, Component } from 'preact'
 import RepoStream from 'components/repo-stream'
 import FilterPanel from 'components/filter-panel'
+import SortPanel from 'components/sort-panel'
 // import style from './style.css'
 
 export default class Home extends Component {
@@ -18,7 +19,7 @@ export default class Home extends Component {
     }
   }
 
-  render({ repos, openRepo, filters, languages, changeFilter }) {
+  render({ repos, openRepo, filters, languages, changeFilter, sorting, changeSorting }) {
     return (
       <div>
         <FilterPanel
@@ -26,6 +27,7 @@ export default class Home extends Component {
           languages={languages}
           changeFilter={changeFilter}
         />
+        <SortPanel sorting={sorting} changeSorting={changeSorting} />
         <RepoStream repos={repos} openRepo={openRepo} />
       </div>
     )

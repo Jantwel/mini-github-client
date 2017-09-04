@@ -3,7 +3,7 @@ import { route } from 'preact-router'
 
 export default class SubmitForm extends Component {
   state = {
-    value: 'jantwel'
+    value: this.props.username
   }
 
   getRepos = event => {
@@ -14,12 +14,11 @@ export default class SubmitForm extends Component {
 
   changeName = ({ target: { value } }) => this.setState({ value })
 
-  render() {
-    const { value } = this.state
+  render({username}, {value}) {
     return (
       <form onSubmit={this.getRepos}>
         <label>Type Name</label>
-        <input value={value} onChange={this.changeName} />
+        <input value={username || value} onChange={this.changeName} />
         <button type="submit">GET!</button>
       </form>
     )

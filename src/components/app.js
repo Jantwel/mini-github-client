@@ -2,7 +2,6 @@ import { h, Component } from 'preact'
 import { Router, route } from 'preact-router'
 
 import Header from './header'
-import SortPanel from './sort-panel'
 import SubmitForm from '../components/submit-form'
 import Dialog from '../components/dialog'
 import request from '../services/request'
@@ -17,8 +16,11 @@ export default class App extends Component {
 
   handleRoute = event => {
     console.log('change route', event)
-    this.syncFilters(event.current)
-    this.syncSorting(event.current)
+    if (event.current) {
+      this.setState({username: event.current.attributes.name})
+      this.syncFilters(event.current)
+      this.syncSorting(event.current)
+    }
   }
 
   syncFilters = (event) => {
@@ -30,22 +32,18 @@ export default class App extends Component {
       [FILTERS.LANGUAGE]: type => event.attributes[type] || INITIAL_STATE.filters[type],
       [FILTERS.TYPE]: type => event.attributes[type] || INITIAL_STATE.filters[type]
     }
-    if (event) {
-      const filters = Object.keys(this.state.filters).reduce((result, type) => {
-        return {...result, [type]: filtersProps[type](type)}
-      }, {})
-      this.setState({filters: {...this.state.filters, ...filters}})
-    }
+    const filters = Object.keys(this.state.filters).reduce((result, type) => {
+      return {...result, [type]: filtersProps[type](type)}
+    }, {})
+    this.setState({filters: {...this.state.filters, ...filters}})
   }
 
   syncSorting = (event) => {
-    if (event) {
-      const {
-        sorting: by = INITIAL_STATE.sorting.by,
-        order = INITIAL_STATE.sorting.order
-      } = event.attributes
-      this.setState({sorting: { by, order}})
-    }
+    const {
+      sorting: by = INITIAL_STATE.sorting.by,
+      order = INITIAL_STATE.sorting.order
+    } = event.attributes
+    this.setState({sorting: { by, order}})
   }
 
   getFromStorage = name => {
@@ -145,24 +143,25 @@ export default class App extends Component {
     return 0
   }
 
-  render({}, { repos, filters, languages, sorting }) {
+  render({}, { username, repos, filters, languages, sorting }) {
     console.log('app state: ', this.state)
     const filteredRepos = repos.filter(this.filterRepo).sort(this.sortRepo)
     return (
       <div id="app">
         <Header />
         <div class={css.main}>
-          <SubmitForm fetchRepos={this.fetchRepos} />
-          <SortPanel sorting={sorting} changeSorting={this.changeSorting} />
+          <SubmitForm username={username} fetchRepos={this.fetchRepos} />
         </div>
         <Router onChange={this.handleRoute}>
           <Home
             path="/:name"
             repos={filteredRepos}
+            fetchRepos={this.fetchRepos}
             filters={filters}
             languages={languages}
             changeFilter={this.changeFilter}
-            fetchRepos={this.fetchRepos}
+            sorting={sorting}
+            changeSorting={this.changeSorting}
           />
           <Dialog path="/:name/:repoName" closeRepo={this.closeRepo} />
         </Router>
