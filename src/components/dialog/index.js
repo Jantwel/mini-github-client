@@ -5,24 +5,28 @@ import css from './style.css'
 const getData = url => fetch(url).then(response => response.json())
 
 export default class Dialog extends Component {
+  constructor() {
+    super()
+    this.keyPressEvent = this.closeByEscape.bind(this)
+  }
+
   state = {}
 
   keyPressEvent = null
 
-  closeDialog = event => this.props.closeRepo(this.props.repo.id)
+  closeDialog = () => this.props.closeRepo(this.props.matches.name)
 
   fetchRepo = async () => {
-    console.log('fetch repos: ', this.props)
     const { matches: { name, repoName } } = this.props
     const { body } = await request(`//api.github.com/repos/${name}/${repoName}`)
-    this.getInfo(body)
+    this.getRepoInfo(body)
   }
 
-  getInfo = repo => {
+  getRepoInfo = repo => {
     const urls = [
       repo.url + '/contributors?per_page=3',
       repo.languages_url,
-      repo.url + '/pulls?state=open&sort=popularity&direction=desc&per_page=5'
+      repo.url + '/pulls?&sort=popularity&direction=desc&per_page=5'
     ]
 
     // fetch repo data
@@ -30,9 +34,11 @@ export default class Dialog extends Component {
       this.setState({ contributors, languages, pulls })
     })
 
-    this.keyPressEvent = document.addEventListener('keydown', event => {
-      event.key === 'Escape' && this.closeDialog()
-    })
+    document.addEventListener('keydown', this.keyPressEvent)
+  }
+
+  closeByEscape = () => {
+    event.key === 'Escape' && this.closeDialog()
   }
 
   componentWillMount() {

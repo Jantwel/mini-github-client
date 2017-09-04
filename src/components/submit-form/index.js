@@ -10,7 +10,6 @@ export default class SubmitForm extends Component {
     event.preventDefault()
     const { value } = this.state
     route(`/${value}`)
-    // this.props.getRepos(value)
   }
 
   changeName = ({ target: { value } }) => this.setState({ value })

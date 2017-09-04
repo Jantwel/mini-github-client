@@ -1,5 +1,5 @@
 import { h, Component } from 'preact'
-import { Router } from 'preact-router'
+import { Router, route } from 'preact-router'
 
 import Header from './header'
 // import Home from '../routes/home';
@@ -59,7 +59,7 @@ export default class App extends Component {
     }
   }
 
-  closeRepo = () => this.setState({ openedRepoId: null })
+  closeRepo = name => route(`/${name}`)
 
   getLanguages = repos =>
     repos.reduce((result, { language }) => {
