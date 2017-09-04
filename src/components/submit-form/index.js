@@ -1,26 +1,27 @@
-import { h, Component } from 'preact';
+import { h, Component } from 'preact'
+import { route } from 'preact-router'
 
 export default class SubmitForm extends Component {
-	state = {
-		value: ''
-	};
+  state = {
+    value: 'jantwel'
+  }
 
-	getRepos = event => {
-		event.preventDefault();
-		const { value } = this.state;
-		this.props.getRepos(value);
-	};
+  getRepos = event => {
+    event.preventDefault()
+    const { value } = this.state
+    route(`/${value}`)
+  }
 
-	changeName = ({ target: { value } }) => this.setState({ value });
+  changeName = ({ target: { value } }) => this.setState({ value })
 
-	render() {
-		const { value } = this.state;
-		return (
-			<form onSubmit={this.getRepos}>
-				<label>Type Name</label>
-				<input value={value} onChange={this.changeName} />
-				<button type="submit">GET!</button>
-			</form>
-		);
-	}
+  render() {
+    const { value } = this.state
+    return (
+      <form onSubmit={this.getRepos}>
+        <label>Type Name</label>
+        <input value={value} onChange={this.changeName} />
+        <button type="submit">GET!</button>
+      </form>
+    )
+  }
 }

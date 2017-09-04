@@ -1,3 +1,7 @@
-node_modules/
-
-build/
+/node_modules
+/npm-debug.log
+/build
+.DS_Store
+.idea/
+/coverage
+package-lock.json
