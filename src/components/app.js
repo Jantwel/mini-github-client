@@ -18,15 +18,26 @@ const SEARCH = '//api.github.com/users'
 export default class App extends Component {
   state = INITIAL_STATE
 
+  getFromStorage = name => {
+    if (!JSON.parse(sessionStorage.getItem(`repos:${name}`))) {
+      return null
+    }
+    return {
+      body: JSON.parse(sessionStorage.getItem(`repos:${name}`)),
+      headers: {}
+    }
+  }
+
   fetchRepos = async (
     name = this.state.username,
     page = this.state.currentPage
   ) => {
     this.setState({ loading: true })
 
-    const { body: repos, headers } = await request(
-      `${SEARCH}/${name}/repos?page=${page}&per_page=60`
-    )
+    const { body: repos, headers } =
+      this.getFromStorage(name) ||
+      (await request(`${SEARCH}/${name}/repos?page=${page}&per_page=60`))
+
     const lastPage = headers.Link ? githubLinksParser(headers.Link).last : 1
 
     if (!this.state.lastPage && lastPage > 1) {
@@ -35,6 +46,8 @@ export default class App extends Component {
         this.handleLoadRepos
       )
     }
+
+    sessionStorage.setItem(`repos:${name}`, JSON.stringify(repos))
 
     this.setState({
       username: name,
