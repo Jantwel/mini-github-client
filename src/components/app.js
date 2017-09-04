@@ -1,5 +1,5 @@
 import { h, Component } from 'preact'
-// import { Router } from 'preact-router';
+import { Router } from 'preact-router'
 
 import Header from './header'
 // import Home from '../routes/home';
@@ -12,7 +12,7 @@ import request from '../services/request'
 import { githubLinksParser, pickBy, createFilters } from '../util'
 import INITIAL_STATE from './initial-state'
 import css from './style.css'
-// import Home from 'async!./home';
+import Home from '../routes/home'
 // import Profile from 'async!./profile';
 const SEARCH = '//api.github.com/users'
 
@@ -23,8 +23,9 @@ export default class App extends Component {
 	 *	@param {Object} event		"change" event from [preact-router](http://git.io/preact-router)
 	 *	@param {string} event.url	The newly routed URL
 	 */
-  handleRoute = e => {
-    this.currentUrl = e.url
+  handleRoute = route => {
+    const { current: { attributes: { matches: { name } } } } = route
+    name.trim() && this.getRepos(name)
   }
 
   getRepos = async (
@@ -37,7 +38,7 @@ export default class App extends Component {
       `${SEARCH}/${name}/repos?page=${page}&per_page=60`
     )
     const lastPage = headers.Link ? githubLinksParser(headers.Link).last : 1
-    console.log('getRepos: ', { repos, headers })
+
     if (!this.state.lastPage && lastPage > 1) {
       this.scrollListener = document.addEventListener(
         'scroll',
@@ -72,14 +73,13 @@ export default class App extends Component {
 
   closeRepo = () => this.setState({ openedRepoId: null })
 
-  getLanguages = repos => {
-    return repos.reduce((result, { language }) => {
+  getLanguages = repos =>
+    repos.reduce((result, { language }) => {
       if (result.includes(language)) {
         return result
       }
       return [...result, language]
     }, [])
-  }
 
   filterRepo = repo => {
     const filters = createFilters(repo)
@@ -90,25 +90,16 @@ export default class App extends Component {
     return pickedFilters.every(key => filters[key](this.state.filters[key]))
   }
 
-  changeFilter = ({ type, value }) => {
-    this.setState({
-      filters: { ...this.state.filters, [type]: value }
-    })
-  }
+  changeFilter = ({ type, value }) =>
+    this.setState({ filters: { ...this.state.filters, [type]: value } })
 
   changeSorting = sorting => this.setState({ sorting })
 
   sortRepo = (prev, next) => {
     const { sorting } = this.state
     const order = {
-      larger: {
-        asc: 1,
-        desc: -1
-      },
-      smaller: {
-        asc: -1,
-        desc: 1
-      }
+      larger: { asc: 1, desc: -1 },
+      smaller: { asc: -1, desc: 1 }
     }
     if (prev[sorting.by] < next[sorting.by]) return order.smaller[sorting.order]
     if (prev[sorting.by] > next[sorting.by]) return order.larger[sorting.order]
@@ -129,21 +120,20 @@ export default class App extends Component {
             changeFilter={this.changeFilter}
           />
           <SortPanel sorting={sorting} changeSorting={this.changeSorting} />
-          <RepoStream
-            repos={filteredRepos}
-            filters={filters}
-            openRepo={this.openRepo}
-          />
           {openedRepoId &&
             <Dialog
               repo={repos.find(({ id }) => id === openedRepoId)}
               closeRepo={this.closeRepo}
             />}
         </div>
-        {/* <Home path="/" getRepos={this.getRepos} repos={repos} /> */}
-        {/* <Router onChange={this.handleRoute}>
-					<Home path="/" getRepos={this.getRepos} repos={repos} />
-				</Router> */}
+        <Router onChange={this.handleRoute}>
+          <Home
+            path="/:name?"
+            openRepo={this.openRepo}
+            repos={filteredRepos}
+            filters={filters}
+          />
+        </Router>
       </div>
     )
   }

@@ -1,14 +1,16 @@
 import { h, Component } from 'preact'
+import { route } from 'preact-router'
 
 export default class SubmitForm extends Component {
   state = {
-    value: 'facebook'
+    value: 'jantwel'
   }
 
   getRepos = event => {
     event.preventDefault()
     const { value } = this.state
-    this.props.getRepos(value)
+    route(`/${value}`)
+    // this.props.getRepos(value)
   }
 
   changeName = ({ target: { value } }) => this.setState({ value })
