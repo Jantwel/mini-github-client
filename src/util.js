@@ -50,3 +50,19 @@ export const createFilters = ({
     return isFork === fork
   }
 })
+
+
+export const buildSearchUrl = (type, value) => {
+  const url = new URL(location.href)
+  const params = url.searchParams
+  const filters = {
+    has_open_issues: () => params.has(type) ? params.delete(type) : params.append(type, ''),
+    has_topics: () => params.has(type) ? params.delete(type) : params.append(type, ''),
+    starred_gt: value => value ? params.set(type, value) :  params.delete(type),
+    updated_at: value => value ? params.set(type, value) :  params.delete(type),
+    language: value => value ? params.set(type, value) :  params.delete(type),
+    type: value => value ? params.set(type, value) :  params.delete(type)
+  }
+  filters[type](value)
+  return url
+}
