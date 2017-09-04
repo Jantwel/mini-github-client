@@ -14,7 +14,7 @@ module.exports = {
 	entry: ['babel-polyfill', './index.js'],
 	output: {
 		path: path.resolve(__dirname, 'docs'),
-		publicPath: '/',
+		publicPath: './',
 		filename: 'bundle.js'
 	},
 
@@ -120,7 +120,7 @@ module.exports = {
 					requestTypes: ['navigate']
 				}
 			],
-			publicPath: '/'
+			publicPath: './'
 		})
 	].concat(
 		ENV === 'production'
@@ -174,7 +174,7 @@ module.exports = {
 	devServer: {
 		port: process.env.PORT || 8050,
 		host: 'localhost',
-		publicPath: '/',
+		publicPath: './',
 		contentBase: './src',
 		historyApiFallback: true,
 		open: true,
