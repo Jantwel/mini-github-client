@@ -1,18 +1,34 @@
+export const FILTERS = {
+  HAS_OPEN_ISSUES: 'has_open_issues',
+  HAS_TOPICS: 'has_topics',
+  STARS: 'starred_gt',
+  UPDATED_AT: 'updated_at',
+  LANGUAGE: 'language',
+  TYPE: 'type'
+}
+
+export const SEARCH_FIELDS = {
+  NAME: 'full_name',
+  STARS: 'stargazers_count',
+  ISSUES: 'open_issues_count',
+  UPDATED_AT: 'pushed_at'
+}
+
 export default {
   username: '',
   repos: [],
   languages: [],
   currentPage: 1,
   filters: {
-    has_open_issues: false,
-    has_topics: false,
-    starred_gt: 0,
-    updated_at: '',
-    language: '',
-    type: 'all'
+    [FILTERS.HAS_OPEN_ISSUES]: false,
+    [FILTERS.HAS_TOPICS]: false,
+    [FILTERS.STARS]: 0,
+    [FILTERS.UPDATED_AT]: '',
+    [FILTERS.LANGUAGE]: '',
+    [FILTERS.TYPE]: 'all'
   },
   sorting: {
-    by: 'full_name',
+    by: [SEARCH_FIELDS.NAME],
     order: 'asc'
   }
 }

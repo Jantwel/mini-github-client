@@ -1,3 +1,5 @@
+import {FILTERS} from 'components/initial-state'
+
 export const githubLinksParser = linkStr =>
   linkStr
     .split(',')
@@ -32,17 +34,17 @@ export const createFilters = ({
   language,
   fork
 }) => ({
-  has_open_issues: () => open_issues_count,
-  has_topics: () => topics.length,
-  starred_gt: value => stargazers_count >= value,
-  updated_at: value => new Date(pushed_at) > new Date(value),
-  language: value => {
+  [FILTERS.HAS_OPEN_ISSUES]: () => open_issues_count,
+  [FILTERS.HAS_TOPICS]: () => topics.length,
+  [FILTERS.STARS]: value => stargazers_count >= value,
+  [FILTERS.UPDATED_AT]: value => new Date(pushed_at) > new Date(value),
+  [FILTERS.LANGUAGE]: value => {
     if (value === 'all') {
       return true
     }
     return language === value
   },
-  type: value => {
+  [FILTERS.TYPE]: value => {
     if (value === 'all') {
       return true
     }
@@ -56,12 +58,12 @@ export const buildSearchUrl = (type, value) => {
   const url = new URL(location.href)
   const params = url.searchParams
   const filters = {
-    has_open_issues: () => params.has(type) ? params.delete(type) : params.append(type, ''),
-    has_topics: () => params.has(type) ? params.delete(type) : params.append(type, ''),
-    starred_gt: value => value ? params.set(type, value) :  params.delete(type),
-    updated_at: value => value ? params.set(type, value) :  params.delete(type),
-    language: value => value ? params.set(type, value) :  params.delete(type),
-    type: value => value ? params.set(type, value) :  params.delete(type)
+    [FILTERS.HAS_OPEN_ISSUES]: () => params.has(type) ? params.delete(type) : params.append(type, ''),
+    [FILTERS.HAS_TOPICS]: () => params.has(type) ? params.delete(type) : params.append(type, ''),
+    [FILTERS.STARS]: value => value ? params.set(type, value) :  params.delete(type),
+    [FILTERS.UPDATED_AT]: value => value ? params.set(type, value) :  params.delete(type),
+    [FILTERS.LANGUAGE]: value => value ? params.set(type, value) :  params.delete(type),
+    [FILTERS.TYPE]: value => value ? params.set(type, value) :  params.delete(type)
   }
   filters[type](value)
   return url

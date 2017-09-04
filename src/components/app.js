@@ -7,7 +7,7 @@ import SubmitForm from '../components/submit-form'
 import Dialog from '../components/dialog'
 import request from '../services/request'
 import { githubLinksParser, pickBy, createFilters, buildSearchUrl } from '../util'
-import INITIAL_STATE from './initial-state'
+import INITIAL_STATE, {FILTERS} from './initial-state'
 import css from './style.css'
 import Home from '../routes/home'
 const SEARCH = '//api.github.com/users'
@@ -22,12 +22,12 @@ export default class App extends Component {
 
   syncFilters = (event) => {
     const filtersProps = {
-      has_open_issues: type => event.attributes.hasOwnProperty(type),
-      has_topics: type => event.attributes.hasOwnProperty(type),
-      starred_gt: type => event.attributes[type] || INITIAL_STATE.filters[type],
-      updated_at: type => event.attributes[type] || INITIAL_STATE.filters[type],
-      language: type => event.attributes[type] || INITIAL_STATE.filters[type],
-      type: type => event.attributes[type] || INITIAL_STATE.filters[type]
+      [FILTERS.HAS_OPEN_ISSUES]: type => event.attributes.hasOwnProperty(type),
+      [FILTERS.HAS_TOPICS]: type => event.attributes.hasOwnProperty(type),
+      [FILTERS.STARS]: type => event.attributes[type] || INITIAL_STATE.filters[type],
+      [FILTERS.UPDATED_AT]: type => event.attributes[type] || INITIAL_STATE.filters[type],
+      [FILTERS.LANGUAGE]: type => event.attributes[type] || INITIAL_STATE.filters[type],
+      [FILTERS.TYPE]: type => event.attributes[type] || INITIAL_STATE.filters[type]
     }
     if (event) {
       const filters = Object.keys(this.state.filters).reduce((result, type) => {

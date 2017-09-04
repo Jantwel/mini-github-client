@@ -1,10 +1,11 @@
 import { h, Component } from 'preact'
+import {SEARCH_FIELDS} from '../initial-state'
 
 const sortingTypes = {
-  full_name: 'Repo name',
-  stargazers_count: 'Stars',
-  open_issues_count: 'Open issues',
-  pushed_at: 'Updated date'
+  [SEARCH_FIELDS.NAME]: 'Repo name',
+  [SEARCH_FIELDS.STARS]: 'Stars',
+  [SEARCH_FIELDS.ISSUES]: 'Open issues',
+  [SEARCH_FIELDS.UPDATED_AT]: 'Updated date'
 }
 
 export default class SortPanel extends Component {
