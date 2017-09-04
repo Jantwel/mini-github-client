@@ -18,7 +18,7 @@ const SEARCH = '//api.github.com/users'
 export default class App extends Component {
   state = INITIAL_STATE
 
-  getRepos = async (
+  fetchRepos = async (
     name = this.state.username,
     page = this.state.currentPage
   ) => {
@@ -55,7 +55,7 @@ export default class App extends Component {
       currentPage < lastPage &&
       !loading
     ) {
-      this.getRepos(username, currentPage + 1)
+      this.fetchRepos(username, currentPage + 1)
     }
   }
 
@@ -94,14 +94,14 @@ export default class App extends Component {
     return 0
   }
 
-  render({}, { repos, openedRepoId, filters, languages, sorting }) {
+  render({}, { repos, filters, languages, sorting }) {
     console.log('app state: ', this.state)
     const filteredRepos = repos.filter(this.filterRepo).sort(this.sortRepo)
     return (
       <div id="app">
         <Header />
         <div class={css.main}>
-          <SubmitForm getRepos={this.getRepos} />
+          <SubmitForm fetchRepos={this.fetchRepos} />
           <FilterPanel
             filters={filters}
             languages={languages}
@@ -114,7 +114,7 @@ export default class App extends Component {
             path="/:name"
             repos={filteredRepos}
             filters={filters}
-            fetchRepos={this.getRepos}
+            fetchRepos={this.fetchRepos}
           />
           <Dialog path="/:name/:repoName" closeRepo={this.closeRepo} />
         </Router>

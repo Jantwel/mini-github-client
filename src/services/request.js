@@ -3,7 +3,7 @@ const configureData = ([body, headers]) => ({
   headers: { Link: headers.get('Link') }
 })
 
-export default (url, options = {}) =>
+const request = (url, options = {}) =>
   fetch(url, {
     method: 'GET',
     headers: { Accept: 'application/vnd.github.mercy-preview+json' },
@@ -11,3 +11,11 @@ export default (url, options = {}) =>
   })
     .then(response => Promise.all([response.json(), response.headers]))
     .then(configureData)
+
+request.all = urls =>
+  urls.map(async url => {
+    const { body } = await request(url)
+    return body
+  })
+
+export default request

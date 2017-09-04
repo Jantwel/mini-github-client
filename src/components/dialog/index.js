@@ -2,57 +2,49 @@ import { h, Component } from 'preact'
 import request from '../../services/request'
 import css from './style.css'
 
-const getData = url => fetch(url).then(response => response.json())
-
 export default class Dialog extends Component {
   constructor() {
     super()
-    this.keyPressEvent = this.closeByEscape.bind(this)
+    this.handlePressEscape = this.closeByEscape.bind(this)
   }
 
-  state = {}
-
-  keyPressEvent = null
+  state = {
+    loading: true
+  }
 
   closeDialog = () => this.props.closeRepo(this.props.matches.name)
+  closeByEscape = () => event.key === 'Escape' && this.closeDialog()
+
+  getUrls = repo => [
+    repo.url + '/contributors?per_page=3',
+    repo.languages_url,
+    repo.url + '/pulls?&sort=popularity&direction=desc&per_page=5'
+  ]
 
   fetchRepo = async () => {
     const { matches: { name, repoName } } = this.props
-    const { body } = await request(`//api.github.com/repos/${name}/${repoName}`)
-    this.getRepoInfo(body)
-  }
+    const { body: repo } = await request(
+      `//api.github.com/repos/${name}/${repoName}`
+    )
+    const [contributors, languages, pulls] = await request.all(
+      this.getUrls(repo)
+    )
 
-  getRepoInfo = repo => {
-    const urls = [
-      repo.url + '/contributors?per_page=3',
-      repo.languages_url,
-      repo.url + '/pulls?&sort=popularity&direction=desc&per_page=5'
-    ]
-
-    // fetch repo data
-    Promise.all(urls.map(getData)).then(([contributors, languages, pulls]) => {
-      this.setState({ contributors, languages, pulls })
-    })
-
-    document.addEventListener('keydown', this.keyPressEvent)
-  }
-
-  closeByEscape = () => {
-    event.key === 'Escape' && this.closeDialog()
+    this.setState({ loading: false, repo, contributors, languages, pulls })
   }
 
   componentWillMount() {
     this.fetchRepo()
+    document.addEventListener('keydown', this.handlePressEscape)
   }
 
   componentWillUnmount() {
-    document.removeEventListener('keydown', this.keyPressEvent)
+    document.removeEventListener('keydown', this.handlePressEscape)
   }
 
-  render() {
-    const { repo } = this.props
-    const { contributors, pulls } = this.state
+  render({}, { loading, repo, contributors, pulls }) {
     return (
+      !loading &&
       <div class={css.dialogWrapper}>
         <div class={css.backcover} onClick={this.closeDialog} />
         <div class={css.dialog}>
