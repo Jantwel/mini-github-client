@@ -1,0 +1,19 @@
+.form {
+  display: flex;
+  font-size: 1.5em;
+  height: 60px;
+  width: 100%;
+}
+
+.input {
+  font-size: inherit;
+  height: 100%;
+  padding: 10px;
+  width: 100%;
+}
+
+.submitButton {
+  font-size: .75em;
+  height: 100%;
+  width: 200px;
+}

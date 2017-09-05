@@ -1,11 +1,11 @@
 import { h, Component } from 'preact'
 import RepoCard from '../../components/repo-card'
+import css from './style.scss'
 
 export default class RepoStream extends Component {
   render({ repos, openRepo }) {
     return (
-      <div ref={ref => (this.stream = ref)}>
-        <h2>Stream</h2>
+      <div class={css.repoStream}>
         {repos.map(
           ({
             id,

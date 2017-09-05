@@ -24,23 +24,28 @@ const time = {
   days: configureDate('days')
 }
 
-const message = (delta) => ({
+const message = delta => ({
   seconds: `${time.seconds(delta)} seconds ago`,
   minutes: `${time.minutes(delta)} minutes ago`,
   hours: `${time.hours(delta)} hours ago`,
   days: `${time.days(delta)} days ago`
 })
 
-const check = {
-  seconds: (date) => time.seconds(date) < 60 ? message(date).seconds : getDate(date, 'minutes'),
-  minutes: (date) => time.minutes(date) < 60 ? message(date).minutes : getDate(date, 'hours'),
-  hours: (date) => time.hours(date) < 24 ? message(date).hours : getDate(date, 'days'),
-  days: (date) => time.days(date) < 30 ? message(date).days : getDate(date, 'default'),
-  default: (date) => date
-}
+const check = main => ({
+  seconds: date =>
+    time.seconds(date) < 60 ? message(date).seconds : getDate(main, 'minutes'),
+  minutes: date =>
+    time.minutes(date) < 60 ? message(date).minutes : getDate(main, 'hours'),
+  hours: date =>
+    time.hours(date) < 24 ? message(date).hours : getDate(main, 'days'),
+  days: date =>
+    time.days(date) < 30 ? message(date).days : getDate(main, 'default'),
+  default: () => new Date(main).toDateString()
+})
 
 export const getDate = (date, type = 'seconds') => {
   const now = new Date()
   const delta = now - new Date(date)
-  return check[type](delta)
+  const checker = check(date)
+  return checker[type](delta)
 }

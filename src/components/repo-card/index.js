@@ -1,20 +1,14 @@
 import { h, Component } from 'preact'
 import { getDate } from './date-helpers'
+import languagesColors from './languages-colors.json'
 import css from './style.scss'
 
 export default class RepoCard extends Component {
   openRepo = () => this.props.openRepo(this.props.name)
 
-  render({
-    full_name,
-    description,
-    stars,
-    updatedAt,
-    language,
-    fork
-  }) {
+  render({ full_name, description, stars, updatedAt, language, fork }) {
     return (
-      <div class={css.card} ref={ref => (this.card = ref)}>
+      <div class={css.card}>
         <h3 class={css.name} onClick={this.openRepo}>
           {full_name}
         </h3>
@@ -26,7 +20,16 @@ export default class RepoCard extends Component {
           {description}
         </p>
         <div class={css.additionalInfo}>
-          <div>
+          <div class={css.language}>
+            <span
+              class={css.languageColor}
+              style={{ backgroundColor: languagesColors[language] }}
+            />
+            <span>
+              {language}
+            </span>
+          </div>
+          <div class={css.stars}>
             <svg
               aria-label="star"
               class="octicon octicon-star"
@@ -43,11 +46,8 @@ export default class RepoCard extends Component {
             </svg>
             {stars}
           </div>
-          <div>
+          <div class={css.updatedDate}>
             Updated At: {getDate(updatedAt)}
-          </div>
-          <div>
-            {language}
           </div>
         </div>
       </div>

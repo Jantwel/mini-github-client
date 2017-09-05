@@ -1,5 +1,6 @@
 import { h, Component } from 'preact'
 import { route } from 'preact-router'
+import css from './style.scss'
 
 export default class SubmitForm extends Component {
   state = {
@@ -14,12 +15,18 @@ export default class SubmitForm extends Component {
 
   changeName = ({ target: { value } }) => this.setState({ value })
 
-  render({username}, {value}) {
+  render({ username }, { value }) {
     return (
-      <form onSubmit={this.getRepos}>
-        <label>Type Name</label>
-        <input value={username || value} onChange={this.changeName} />
-        <button type="submit">GET!</button>
+      <form onSubmit={this.getRepos} class={css.form}>
+        <input
+          class={css.input}
+          value={username || value}
+          onChange={this.changeName}
+          placeholder="Username"
+        />
+        <button type="submit" class={css.submitButton}>
+          Load Repos
+        </button>
       </form>
     )
   }

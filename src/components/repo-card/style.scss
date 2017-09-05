@@ -1,17 +1,49 @@
 .card {
-	padding: 20px 0;
-	border-bottom: 1px solid #ddd;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  display: flex;
+  flex: 2;
+  flex-direction: column;
+  justify-content: space-between;
+  margin: 10px;
+  min-width: 300px;
+  padding: 20px;
 }
 
 .name {
-	color: #0366d6;
+  color: #0366d6;
+  margin-top: 0;
 
-	&:hover {
-		text-decoration: underline;
-		cursor: pointer;
-	}
+  &:hover {
+    text-decoration: underline;
+    cursor: pointer;
+  }
 }
 
 .additionalInfo {
-	/*display: flex;*/
+  border-top: 1px solid #eee;
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+  padding-top: 10px;
+}
+
+.language {
+  width: 50%;
+}
+
+.languageColor {
+  display: inline-block;
+  height: 12px;
+  width: 12px;
+  border-radius: 50%;
+  margin-right: 5px;
+}
+
+.stars {
+  width: 50%;
+}
+
+.updatedDate {
+  width: 100%;
 }
