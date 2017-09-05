@@ -67,6 +67,10 @@ export default class App extends Component {
     }
   }
 
+  /** Fetch repositories by user
+   *	@param {string} username
+   *  @param {number || string} current page
+   */
   fetchRepos = async (
     name = this.state.username,
     page = this.state.currentPage

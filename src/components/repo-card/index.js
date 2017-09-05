@@ -7,12 +7,12 @@ export default class RepoCard extends Component {
   openRepo = () => this.props.openRepo(this.props.name)
   render({ full_name, description, stars, updatedAt, language, fork }) {
     return (
-      <div class={css.card}>
-        <h3 class={css.name} onClick={this.openRepo}>
+      <div class={css.card} onClick={this.openRepo}>
+        <h3 class={css.name}>
           {full_name}
         </h3>
         {fork &&
-          <div>
+          <div class={css.forkLabel}>
             <small>Fork</small>
           </div>}
         <p class={css.description}>

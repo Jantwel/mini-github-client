@@ -99,6 +99,13 @@ export default class Dialog extends Component {
               <h3 class={css.header}>
                 {repo && repo.full_name}
               </h3>
+              {repo.fork &&
+                  <p>
+                    Forked from{' '}
+                    <a href={repo.parent.html_url} target="_blank">
+                      {repo.parent.full_name}
+                    </a>
+                  </p>}
               <div>
                 <h4>Contributors</h4>
                 <div class={css.contributors}>
