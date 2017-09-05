@@ -11,7 +11,7 @@ export default class SubmitForm extends Component {
     event.preventDefault()
     const url = new URL(location.href)
     const { value } = this.state
-    console.log('getREpos: ', {url, value})
+    console.log('getREpo s: ', {url, value})
     route(`${url.pathname}${value}`)
     // route(`${url.href}?${value}`)
   }
