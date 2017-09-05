@@ -34,25 +34,13 @@ export default class Dialog extends Component {
       `//api.github.com/repos/${name}/${repoName}`
     )
 
-    Promise.all(this.getUrls(repo)).then(([contributors, languages, pulls]) => {
-      sessionStorage.setItem(
-        `repo:${repoName}`,
-        JSON.stringify({ repo, contributors, languages, pulls })
-      )
+    Promise.all(this.getUrls(repo)).then(([contributors, languages, pulls]) =>
       this.setState({ loading: false, repo, contributors, languages, pulls })
-    })
+    )
   }
 
   componentWillMount() {
-    const { repoName } = this.props
-    if (JSON.parse(sessionStorage.getItem(`repo:${repoName}`))) {
-      this.setState({
-        ...JSON.parse(sessionStorage.getItem(`repo:${repoName}`)),
-        loading: false
-      })
-    } else {
-      this.fetchRepo()
-    }
+    this.fetchRepo()
     document.addEventListener('keydown', this.handlePressEscape)
   }
 
@@ -97,11 +85,7 @@ export default class Dialog extends Component {
 
   render({}, { loading, repo, languages = [], contributors, pulls }) {
     const filteredLanguages = this.getLanguages(languages)
-    console.log('dialog props: ', {
-      props: this.props,
-      state: this.state,
-      filteredLanguages
-    })
+
     return (
       <div class={css.dialogWrapper}>
         <div class={css.backcover} onClick={this.closeDialog} />
@@ -165,17 +149,17 @@ export default class Dialog extends Component {
                       )}
                 </div>
               </div>
-              <div>
-                <h4>Pull Requests</h4>
-                {pulls &&
-                    pulls.map(({ title, html_url }) =>
+              {pulls &&
+                  <div>
+                    <h4>Pull Requests</h4>
+                    {pulls.map(({ title, html_url }) =>
                       <div>
                         <a href={html_url} target="_blank">
                           {title}
                         </a>
                       </div>
                     )}
-              </div>
+                  </div>}
             </div>}
         </div>
       </div>

@@ -15,7 +15,8 @@ import INITIAL_STATE, { FILTERS } from './initial-state'
 import css from './style.css'
 import Home from '../routes/home'
 const SEARCH = '//api.github.com/users'
-const PUBLIC_PATH = process.env.NODE_ENV === 'development' ? '/' : '/mini-github-client/'
+const PUBLIC_PATH =
+  process.env.NODE_ENV === 'development' ? '/' : '/mini-github-client/'
 
 export default class App extends Component {
   state = { ...INITIAL_STATE }
@@ -73,9 +74,9 @@ export default class App extends Component {
     this.setState({ loading: true })
 
     try {
-      const { body: repos, headers } =
-        this.getFromStorage(name) ||
-        (await request(`${SEARCH}/${name}/repos?page=${page}&per_page=60`))
+      const { body: repos, headers } = await request(
+        `${SEARCH}/${name}/repos?page=${page}&per_page=60`
+      )
 
       const lastPage = headers.Link ? githubLinksParser(headers.Link).last : 1
 
@@ -85,10 +86,6 @@ export default class App extends Component {
           this.handleLoadRepos
         )
       }
-
-      console.log('repos: ', repos, headers)
-
-      sessionStorage.setItem(`repos:${name}`, JSON.stringify(repos))
 
       this.setState({
         username: name,
@@ -100,7 +97,6 @@ export default class App extends Component {
         error: null
       })
     } catch (error) {
-      console.error('EEERORR: ', error)
       this.setState({ error })
     }
   }
@@ -150,7 +146,8 @@ export default class App extends Component {
     const url = new URL(location.href)
     const params = url.searchParams
     sorting.by !== this.state.sorting.by && params.set('sort', sorting.by)
-    sorting.order !== this.state.sorting.order && params.set('order', sorting.order)
+    sorting.order !== this.state.sorting.order &&
+      params.set('order', sorting.order)
     route(url.pathname + url.search)
   }
 
@@ -166,7 +163,6 @@ export default class App extends Component {
   }
 
   render({}, { username, repos, filters, languages, sorting, error }) {
-    console.log('app state: ', this.state)
     const filteredRepos = repos.filter(this.filterRepo).sort(this.sortRepo)
     return (
       <div id="app">

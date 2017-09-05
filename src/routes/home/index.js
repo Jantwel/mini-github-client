@@ -3,7 +3,6 @@ import RepoStream from 'components/repo-stream'
 import FilterPanel from 'components/filter-panel'
 import SortPanel from 'components/sort-panel'
 import Dialog from 'components/dialog'
-// import css from './style.scss'
 
 export default class Home extends Component {
   state = {}
