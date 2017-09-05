@@ -13,6 +13,9 @@
 .name {
   color: #0366d6;
   margin-top: 0;
+  max-width: 100%;
+  text-overflow: ellipsis;
+  overflow: hidden;
 
   &:hover {
     text-decoration: underline;
@@ -20,10 +23,15 @@
   }
 }
 
+.description {
+  max-width: 100%;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+
 .additionalInfo {
   border-top: 1px solid #eee;
   display: flex;
-  flex-direction: column;
   flex-wrap: wrap;
   padding-top: 10px;
 }

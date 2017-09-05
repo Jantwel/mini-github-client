@@ -48,7 +48,7 @@ export default class Home extends Component {
         {repo && <Dialog name={name} repoName={repo} closeRepo={closeRepo} />}
       </div>
       : <div>
-        <h1>Ooops! Something went wrong :(</h1>
+        <h2>Ooops! Something went wrong :(</h2>
       </div>
   }
 }

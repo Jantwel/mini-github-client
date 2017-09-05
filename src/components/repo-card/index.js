@@ -16,7 +16,7 @@ export default class RepoCard extends Component {
           <div>
             <small>Fork</small>
           </div>}
-        <p>
+        <p class={css.description}>
           {description}
         </p>
         <div class={css.additionalInfo}>
