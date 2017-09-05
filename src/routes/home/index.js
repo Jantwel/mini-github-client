@@ -2,9 +2,12 @@ import { h, Component } from 'preact'
 import RepoStream from 'components/repo-stream'
 import FilterPanel from 'components/filter-panel'
 import SortPanel from 'components/sort-panel'
+import Dialog from 'components/dialog'
 // import style from './style.css'
 
 export default class Home extends Component {
+  state = {}
+
   componentWillMount() {
     const { matches: { name }, fetchRepos } = this.props
     name && fetchRepos(name)
@@ -19,7 +22,7 @@ export default class Home extends Component {
     }
   }
 
-  render({ repos, openRepo, filters, languages, changeFilter, sorting, changeSorting }) {
+  render({ repos, openRepo, filters, name, languages, changeFilter, sorting, changeSorting, repo, closeRepo }) {
     return (
       <div>
         <FilterPanel
@@ -29,6 +32,7 @@ export default class Home extends Component {
         />
         <SortPanel sorting={sorting} changeSorting={changeSorting} />
         <RepoStream repos={repos} openRepo={openRepo} />
+        {repo && <Dialog name={name} repoName={repo} closeRepo={closeRepo} />}
       </div>
     )
   }

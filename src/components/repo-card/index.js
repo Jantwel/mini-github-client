@@ -1,24 +1,23 @@
 import { h, Component } from 'preact'
-import { Link } from 'preact-router'
 import { getDate } from './date-helpers'
 import css from './style.scss'
 
 export default class RepoCard extends Component {
-  render() {
-    const {
-      id,
-      name,
-      description,
-      stars,
-      updatedAt,
-      language,
-      fork
-    } = this.props
+  openRepo = () => this.props.openRepo(this.props.name)
+
+  render({
+    full_name,
+    description,
+    stars,
+    updatedAt,
+    language,
+    fork
+  }) {
     return (
       <div class={css.card} ref={ref => (this.card = ref)}>
-        <Link class={css.name} href={`/${name}`}>
-          {name}
-        </Link>
+        <h3 class={css.name} onClick={this.openRepo}>
+          {full_name}
+        </h3>
         {fork &&
           <div>
             <small>Fork</small>

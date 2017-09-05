@@ -3,7 +3,6 @@ import { Router, route } from 'preact-router'
 
 import Header from './header'
 import SubmitForm from '../components/submit-form'
-import Dialog from '../components/dialog'
 import request from '../services/request'
 import { githubLinksParser, pickBy, createFilters, buildFiltersUrl } from '../util'
 import INITIAL_STATE, {FILTERS} from './initial-state'
@@ -100,7 +99,19 @@ export default class App extends Component {
     }
   }
 
-  closeRepo = name => route(`/${name}`)
+  openRepo = (id) => {
+    const url = new URL(location.href)
+    const params = url.searchParams
+    params.append('repo', id)
+    route(url.pathname + url.search)
+  }
+
+  closeRepo = () => {
+    const url = new URL(location.href)
+    const params = url.searchParams
+    params.delete('repo')
+    route(url.pathname + url.search)
+  }
 
   getLanguages = repos =>
     repos.reduce((result, { language }) => {
@@ -162,8 +173,9 @@ export default class App extends Component {
             changeFilter={this.changeFilter}
             sorting={sorting}
             changeSorting={this.changeSorting}
+            openRepo={this.openRepo}
+            closeRepo={this.closeRepo}
           />
-          <Dialog path="/:name/:repoName" closeRepo={this.closeRepo} />
         </Router>
       </div>
     )

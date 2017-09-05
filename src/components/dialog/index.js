@@ -14,7 +14,7 @@ export default class Dialog extends Component {
     loading: true
   }
 
-  closeDialog = () => this.props.closeRepo(this.props.matches.name)
+  closeDialog = () => this.props.closeRepo()
   closeByEscape = () => event.key === 'Escape' && this.closeDialog()
 
   getUrls = repo =>
@@ -25,14 +25,14 @@ export default class Dialog extends Component {
     ].map(getData)
 
   fetchRepo = async () => {
-    // const { matches: { name, repoName } } = this.props
-    // const { body: repo } = await request(
-    //   `//api.github.com/repos/${name}/${repoName}`
-    // )
-    //
-    // Promise.all(this.getUrls(repo)).then(([contributors, languages, pulls]) =>
-    //   this.setState({ loading: false, repo, contributors, languages, pulls })
-    // )
+    const { name, repoName } = this.props
+    const { body: repo } = await request(
+      `//api.github.com/repos/${name}/${repoName}`
+    )
+
+    Promise.all(this.getUrls(repo)).then(([contributors, languages, pulls]) =>
+      this.setState({ loading: false, repo, contributors, languages, pulls })
+    )
   }
 
   componentWillMount() {
@@ -45,6 +45,7 @@ export default class Dialog extends Component {
   }
 
   render({}, { loading, repo, contributors, pulls }) {
+    console.log('dialog props: ', this.props)
     return (
       <div class={css.dialogWrapper}>
         <div class={css.backcover} onClick={this.closeDialog} />

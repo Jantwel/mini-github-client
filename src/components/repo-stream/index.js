@@ -2,14 +2,15 @@ import { h, Component } from 'preact'
 import RepoCard from '../../components/repo-card'
 
 export default class RepoStream extends Component {
-  render({ repos, closeRepo }) {
+  render({ repos, openRepo }) {
     return (
       <div ref={ref => (this.stream = ref)}>
         <h2>Stream</h2>
         {repos.map(
           ({
             id,
-            full_name: name,
+            full_name,
+            name,
             description,
             stargazers_count: stars,
             pushed_at: updatedAt,
@@ -20,6 +21,7 @@ export default class RepoStream extends Component {
             <RepoCard
               {...{
                 id,
+                full_name,
                 name,
                 description,
                 stars,
@@ -27,7 +29,7 @@ export default class RepoStream extends Component {
                 language,
                 fork,
                 topics,
-                closeRepo
+                openRepo
               }}
             />
         )}
