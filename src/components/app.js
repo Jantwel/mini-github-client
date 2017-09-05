@@ -13,7 +13,7 @@ import {
   createRepoSorting
 } from '../util'
 import INITIAL_STATE, { FILTERS } from './initial-state'
-import css from './style.css'
+import css from './style.scss'
 import Home from '../routes/home'
 const SEARCH = '//api.github.com/users'
 const PUBLIC_PATH =
