@@ -1,6 +1,6 @@
 {
-  "name": "Miti Github Client",
-  "short_name": "Miti_Github_Client",
+  "name": "Mini Github Client",
+  "short_name": "Mini_Github_Client",
   "start_url": "./",
   "display": "standalone",
   "orientation": "portrait",
