@@ -117,17 +117,29 @@ export default class Dialog extends Component {
               </h3>
               <div>
                 <h4>Contributors</h4>
-                {contributors &&
-                    contributors.map(({ login, url, contributions }) =>
-                      <div>
-                        <a href={url}>
-                          {login}
-                        </a>
-                        <span>
-                          Contributions: {contributions}
-                        </span>
-                      </div>
-                    )}
+                <div class={css.contributors}>
+                  {contributors &&
+                      contributors.map(
+                        ({ login, avatar_url, html_url, contributions }) =>
+                          <div class={css.contributor}>
+                            <img
+                              class={css.contributorAvatar}
+                              src={avatar_url}
+                              alt={`Contributor avatar: ${login}`}
+                            />
+                            <a
+                              href={html_url}
+                              class={css.contributor__link}
+                              target="_blank"
+                            >
+                              {login}
+                            </a>
+                            <span>
+                              Contributions: {contributions}
+                            </span>
+                          </div>
+                      )}
+                </div>
               </div>
               <div>
                 <h4>Languages</h4>
@@ -156,9 +168,9 @@ export default class Dialog extends Component {
               <div>
                 <h4>Pull Requests</h4>
                 {pulls &&
-                    pulls.map(({ title, url }) =>
+                    pulls.map(({ title, html_url }) =>
                       <div>
-                        <a href={url}>
+                        <a href={html_url} target="_blank">
                           {title}
                         </a>
                       </div>

@@ -9,8 +9,11 @@ export default class SubmitForm extends Component {
 
   getRepos = event => {
     event.preventDefault()
+    const url = new URL(location.href)
     const { value } = this.state
-    route(`/${value}`)
+    console.log('getREpos: ', url)
+    route(`${url.pathname}${value}`)
+    // route(`${url.href}?${value}`)
   }
 
   changeName = ({ target: { value } }) => this.setState({ value })

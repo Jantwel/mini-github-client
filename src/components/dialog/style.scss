@@ -32,6 +32,27 @@
   right: 10px;
 }
 
+.contributors {
+  display: flex;
+}
+
+.contributor {
+  margin: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  &__link {
+    display: block;
+  }
+}
+
+.contributorAvatar {
+  width: 100px;
+  height: 100px;
+  display: block;
+}
+
 .languagesList {
 }
 
