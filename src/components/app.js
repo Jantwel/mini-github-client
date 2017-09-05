@@ -4,45 +4,54 @@ import { Router, route } from 'preact-router'
 import Header from './header'
 import SubmitForm from '../components/submit-form'
 import request from '../services/request'
-import { githubLinksParser, pickBy, createFilters, buildFiltersUrl } from '../util'
-import INITIAL_STATE, {FILTERS} from './initial-state'
+import {
+  githubLinksParser,
+  pickBy,
+  createFilters,
+  buildFiltersUrl
+} from '../util'
+import INITIAL_STATE, { FILTERS } from './initial-state'
 import css from './style.css'
 import Home from '../routes/home'
 const SEARCH = '//api.github.com/users'
 
 export default class App extends Component {
-  state = {...INITIAL_STATE}
+  state = { ...INITIAL_STATE }
 
   handleRoute = event => {
     console.log('change route', event)
     if (event.current) {
-      this.setState({username: event.current.attributes.name})
+      this.setState({ username: event.current.attributes.name })
       this.syncFilters(event.current)
       this.syncSorting(event.current)
     }
   }
 
-  syncFilters = (event) => {
+  syncFilters = event => {
     const filtersProps = {
       [FILTERS.HAS_OPEN_ISSUES]: type => event.attributes.hasOwnProperty(type),
       [FILTERS.HAS_TOPICS]: type => event.attributes.hasOwnProperty(type),
-      [FILTERS.STARS]: type => event.attributes[type] || INITIAL_STATE.filters[type],
-      [FILTERS.UPDATED_AT]: type => event.attributes[type] || INITIAL_STATE.filters[type],
-      [FILTERS.LANGUAGE]: type => event.attributes[type] || INITIAL_STATE.filters[type],
-      [FILTERS.TYPE]: type => event.attributes[type] || INITIAL_STATE.filters[type]
+      [FILTERS.STARS]: type =>
+        event.attributes[type] || INITIAL_STATE.filters[type],
+      [FILTERS.UPDATED_AT]: type =>
+        event.attributes[type] || INITIAL_STATE.filters[type],
+      [FILTERS.LANGUAGE]: type =>
+        event.attributes[type] || INITIAL_STATE.filters[type],
+      [FILTERS.TYPE]: type =>
+        event.attributes[type] || INITIAL_STATE.filters[type]
     }
     const filters = Object.keys(this.state.filters).reduce((result, type) => {
-      return {...result, [type]: filtersProps[type](type)}
+      return { ...result, [type]: filtersProps[type](type) }
     }, {})
-    this.setState({filters: {...this.state.filters, ...filters}})
+    this.setState({ filters: { ...this.state.filters, ...filters } })
   }
 
-  syncSorting = (event) => {
+  syncSorting = event => {
     const {
       sort: by = INITIAL_STATE.sorting.by,
       order = INITIAL_STATE.sorting.order
     } = event.attributes
-    this.setState({sorting: { by, order}})
+    this.setState({ sorting: { by, order } })
   }
 
   getFromStorage = name => {
@@ -99,7 +108,7 @@ export default class App extends Component {
     }
   }
 
-  openRepo = (id) => {
+  openRepo = id => {
     const url = new URL(location.href)
     const params = url.searchParams
     params.append('repo', id)
@@ -139,7 +148,8 @@ export default class App extends Component {
     const url = new URL(location.href)
     const params = url.searchParams
     sorting.by !== this.state.sorting.by && params.set('sort', sorting.by)
-    sorting.order !== this.state.sorting.order && params.set('order', sorting.order)
+    sorting.order !== this.state.sorting.order &&
+      params.set('order', sorting.order)
     route(url.pathname + url.search)
   }
 
@@ -160,11 +170,10 @@ export default class App extends Component {
     return (
       <div id="app">
         <Header />
-        <div class={css.main}>
-          <SubmitForm username={username} fetchRepos={this.fetchRepos} />
-        </div>
+        <SubmitForm username={username} fetchRepos={this.fetchRepos} />
         <Router onChange={this.handleRoute}>
           <Home
+            class={css.main}
             path="/:name"
             repos={filteredRepos}
             fetchRepos={this.fetchRepos}

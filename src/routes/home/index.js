@@ -3,7 +3,7 @@ import RepoStream from 'components/repo-stream'
 import FilterPanel from 'components/filter-panel'
 import SortPanel from 'components/sort-panel'
 import Dialog from 'components/dialog'
-// import style from './style.css'
+// import css from './style.scss'
 
 export default class Home extends Component {
   state = {}
@@ -22,9 +22,21 @@ export default class Home extends Component {
     }
   }
 
-  render({ repos, openRepo, filters, name, languages, changeFilter, sorting, changeSorting, repo, closeRepo }) {
+  render({
+    repos,
+    openRepo,
+    filters,
+    name,
+    languages,
+    changeFilter,
+    sorting,
+    changeSorting,
+    repo,
+    closeRepo,
+    class: className
+  }) {
     return (
-      <div>
+      <div class={className}>
         <FilterPanel
           filters={filters}
           languages={languages}

@@ -1,0 +1,14 @@
+.filtersPanel {
+  // display: flex;
+  width: 300px;
+  grid-area: filter;
+}
+
+.category {
+  border-bottom: 1px solid #eee;
+  padding: 10px 0;
+
+  p {
+    margin-top: 0;
+  }
+}

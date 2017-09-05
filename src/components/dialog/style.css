@@ -1,6 +1,8 @@
 .dialog {
 	background: #fff;
 	width: 400px;
+	max-height: calc(100vh - 160px);
+	overflow: scroll;
 	position: fixed;
 	top: 80px;
 	left: 50%;

@@ -1,5 +1,6 @@
 import { h, Component } from 'preact'
-import {SEARCH_FIELDS} from '../initial-state'
+import { SEARCH_FIELDS } from '../initial-state'
+import css from './style.scss'
 
 const sortingTypes = {
   [SEARCH_FIELDS.NAME]: 'Repo name',
@@ -24,7 +25,7 @@ export default class SortPanel extends Component {
   render({ sorting }) {
     const types = Object.keys(sortingTypes)
     return (
-      <div>
+      <div class={css.sortPanel}>
         <h4>Sort: </h4>
         <div>
           <select name="sort" id="sort" onChange={this.changeSorting}>
