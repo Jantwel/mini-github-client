@@ -178,19 +178,12 @@ module.exports = {
   devtool: ENV === 'production' ? 'source-map' : 'cheap-module-eval-source-map',
 
   devServer: {
-    port: process.env.PORT || 8050,
+    port: process.env.PORT || 8080,
     host: 'localhost',
     publicPath: '/',
     contentBase: './src',
     historyApiFallback: true,
     open: true,
-    openPage: '',
-    proxy: {
-      // OPTIONAL: proxy configuration:
-      // '/optional-prefix/**': { // path pattern to rewrite
-      //   target: 'http://target-host.com',
-      //   pathRewrite: path => path.replace(/^\/[^\/]+\//, '')   // strip first path segment
-      // }
-    }
+    openPage: ''
   }
 }
