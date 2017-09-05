@@ -49,3 +49,10 @@ export const getDate = (date, type = 'seconds') => {
   const checker = check(date)
   return checker[type](delta)
 }
+
+export const getStars = stars => {
+  if (stars > 1024) {
+    return `${(stars / 1024).toFixed(1)}k`
+  }
+  return stars
+}

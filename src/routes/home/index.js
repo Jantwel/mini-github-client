@@ -3,6 +3,7 @@ import RepoStream from 'components/repo-stream'
 import FilterPanel from 'components/filter-panel'
 import SortPanel from 'components/sort-panel'
 import Dialog from 'components/dialog'
+import Loader from 'components/loader'
 
 export default class Home extends Component {
   state = {}
@@ -33,6 +34,7 @@ export default class Home extends Component {
     repo,
     closeRepo,
     error,
+    loading,
     class: className
   }) {
     return !error
@@ -43,7 +45,8 @@ export default class Home extends Component {
           changeFilter={changeFilter}
         />
         <SortPanel sorting={sorting} changeSorting={changeSorting} />
-        <RepoStream repos={repos} openRepo={openRepo} />
+        {loading && <Loader />}
+        {!loading && <RepoStream repos={repos} openRepo={openRepo} />}
         {repo && <Dialog name={name} repoName={repo} closeRepo={closeRepo} />}
       </div>
       : <div>

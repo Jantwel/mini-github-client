@@ -1,7 +1,8 @@
 import { h, Component } from 'preact'
 import { route } from 'preact-router'
 import css from './style.scss'
-
+const PUBLIC_PATH =
+  process.env.NODE_ENV === 'development' ? '/' : '/mini-github-client/'
 export default class SubmitForm extends Component {
   state = {
     value: this.props.username
@@ -11,10 +12,9 @@ export default class SubmitForm extends Component {
     event.preventDefault()
     const url = new URL(location.href)
     const { value } = this.state
-    const {log} = console
-    log('getREpo s: ', {url, value})
-    route(`${url.pathname}${value}`)
-    // route(`${url.href}?${value}`)
+    const { log } = console
+    log('getREpo s: ', { url, value })
+    route(`${PUBLIC_PATH}${value}`)
   }
 
   changeName = ({ target: { value } }) => this.setState({ value })

@@ -4,12 +4,9 @@ const configureData = ([body, headers]) => ({
 })
 
 const checkResponse = response => {
-  // const parsedResponse = parseResponse(response)
-  console.log('check response: ', response)
   if (response.status === 404) {
     return Promise.reject('Erorr. Not Found')
   }
-
   return Promise.all([response.json(), response.headers])
 }
 

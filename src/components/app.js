@@ -9,7 +9,8 @@ import {
   pickBy,
   createFilters,
   buildFiltersUrl,
-  getLanguages
+  getLanguages,
+  createRepoSorting
 } from '../util'
 import INITIAL_STATE, { FILTERS } from './initial-state'
 import css from './style.css'
@@ -22,7 +23,6 @@ export default class App extends Component {
   state = { ...INITIAL_STATE }
 
   handleRoute = event => {
-    console.log('change route', event)
     if (event.current && !this.state.error) {
       this.setState({ username: event.current.attributes.name })
       this.syncFilters(event.current)
@@ -151,18 +151,9 @@ export default class App extends Component {
     route(url.pathname + url.search)
   }
 
-  sortRepo = (prev, next) => {
-    const { sorting } = this.state
-    const order = {
-      larger: { asc: 1, desc: -1 },
-      smaller: { asc: -1, desc: 1 }
-    }
-    if (prev[sorting.by] < next[sorting.by]) return order.smaller[sorting.order]
-    if (prev[sorting.by] > next[sorting.by]) return order.larger[sorting.order]
-    return 0
-  }
+  sortRepo = createRepoSorting(this.state)
 
-  render({}, { username, repos, filters, languages, sorting, error }) {
+  render({}, { username, repos, filters, languages, sorting, error, loading }) {
     const filteredRepos = repos.filter(this.filterRepo).sort(this.sortRepo)
     return (
       <div id="app">
@@ -173,6 +164,7 @@ export default class App extends Component {
             class={css.main}
             path={`${PUBLIC_PATH}:name`}
             error={error}
+            loading={loading}
             repos={filteredRepos}
             fetchRepos={this.fetchRepos}
             filters={filters}

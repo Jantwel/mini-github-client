@@ -84,3 +84,20 @@ export const getLanguages = repos =>
     }
     return [...result, language || 'None']
   }, [])
+
+const normalizeValue = value => {
+  return typeof value === 'string' ? value.toLowerCase() : value
+}
+
+export const createRepoSorting = state => (prev, next) => {
+  const { sorting } = state
+  const order = {
+    larger: { asc: 1, desc: -1 },
+    smaller: { asc: -1, desc: 1 }
+  }
+  if (normalizeValue(prev[sorting.by]) < normalizeValue(next[sorting.by]))
+    return order.smaller[sorting.order]
+  if (normalizeValue(prev[sorting.by]) > normalizeValue(next[sorting.by]))
+    return order.larger[sorting.order]
+  return 0
+}
