@@ -6,6 +6,7 @@
     "dev": "cross-env NODE_ENV=development webpack-dev-server --inline --hot --progress",
     "start": "serve docs -s -c 1",
     "prestart": "npm run build",
+    "precommit-msg": "echo 'Pre-commit checks...' && exit 0",
     "deploy": "npm run build && gh-pages --dist docs --branch master",
     "build": "cross-env NODE_ENV=production webpack --progress",
     "test": "npm run -s lint && jest --coverage",
@@ -17,7 +18,7 @@
     "boilerplate",
     "webpack"
   ],
-  "pre-commit": ["deploy"],
+  "pre-commit": ["precommit-msg", "deploy"],
   "license": "MIT",
   "author": "Vasyl Pahut <pagut.vasyl@gmail.com>",
   "jest": {
