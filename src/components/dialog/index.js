@@ -1,6 +1,7 @@
 import { h, Component } from 'preact'
 import request from '../../services/request'
 import Loader from 'components/loader'
+import languagesColors from '../repo-card/languages-colors.json'
 import css from './style.scss'
 
 const getData = url => fetch(url).then(response => response.json())
@@ -33,13 +34,25 @@ export default class Dialog extends Component {
       `//api.github.com/repos/${name}/${repoName}`
     )
 
-    Promise.all(this.getUrls(repo)).then(([contributors, languages, pulls]) =>
+    Promise.all(this.getUrls(repo)).then(([contributors, languages, pulls]) => {
+      sessionStorage.setItem(
+        `repo:${repoName}`,
+        JSON.stringify({ repo, contributors, languages, pulls })
+      )
       this.setState({ loading: false, repo, contributors, languages, pulls })
-    )
+    })
   }
 
   componentWillMount() {
-    this.fetchRepo()
+    const { repoName } = this.props
+    if (JSON.parse(sessionStorage.getItem(`repo:${repoName}`))) {
+      this.setState({
+        ...JSON.parse(sessionStorage.getItem(`repo:${repoName}`)),
+        loading: false
+      })
+    } else {
+      this.fetchRepo()
+    }
     document.addEventListener('keydown', this.handlePressEscape)
   }
 
@@ -118,17 +131,27 @@ export default class Dialog extends Component {
               </div>
               <div>
                 <h4>Languages</h4>
-                {filteredLanguages &&
-                    filteredLanguages.map(([name, size]) =>
-                      <div>
-                        <span>
-                          {name}
-                        </span>
-                        <span>
-                          Size: {size}
-                        </span>
-                      </div>
-                    )}
+                <div class={css.languagesList}>
+                  {filteredLanguages &&
+                      filteredLanguages.map(([name, size]) =>
+                        <div class={css.language}>
+                          <div class={css.languageDescription}>
+                            <span>
+                              {name}: {size}%
+                            </span>
+                          </div>
+                          <div class={css.languageGraph}>
+                            <div
+                              style={{
+                                width: `${size}%`,
+                                height: '100%',
+                                backgroundColor: languagesColors[name]
+                              }}
+                            />
+                          </div>
+                        </div>
+                      )}
+                </div>
               </div>
               <div>
                 <h4>Pull Requests</h4>
