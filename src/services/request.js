@@ -19,7 +19,7 @@ const request = (url, options = {}) =>
     .then(checkResponse)
     .then(configureData)
     .catch(error => {
-      console.log('cath erorr: ', error)
+      console.error('cath erorr: ', error)
       return { body: [] }
     })
 
