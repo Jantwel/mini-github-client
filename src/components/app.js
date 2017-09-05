@@ -15,6 +15,7 @@ import INITIAL_STATE, { FILTERS } from './initial-state'
 import css from './style.css'
 import Home from '../routes/home'
 const SEARCH = '//api.github.com/users'
+const PUBLIC_PATH = process.env.NODE_ENV === 'development' ? '/' : '/mini-github-client/'
 
 export default class App extends Component {
   state = { ...INITIAL_STATE }
@@ -174,7 +175,7 @@ export default class App extends Component {
         <Router onChange={this.handleRoute}>
           <Home
             class={css.main}
-            path="/:name"
+            path={`${PUBLIC_PATH}:name`}
             error={error}
             repos={filteredRepos}
             fetchRepos={this.fetchRepos}
