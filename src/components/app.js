@@ -149,8 +149,7 @@ export default class App extends Component {
     const url = new URL(location.href)
     const params = url.searchParams
     sorting.by !== this.state.sorting.by && params.set('sort', sorting.by)
-    sorting.order !== this.state.sorting.order &&
-      params.set('order', sorting.order)
+    sorting.order !== this.state.sorting.order && params.set('order', sorting.order)
     route(url.pathname + url.search)
   }
 
