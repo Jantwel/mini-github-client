@@ -40,7 +40,7 @@ export default class App extends Component {
 
   syncSorting = (event) => {
     const {
-      sorting: by = INITIAL_STATE.sorting.by,
+      sort: by = INITIAL_STATE.sorting.by,
       order = INITIAL_STATE.sorting.order
     } = event.attributes
     this.setState({sorting: { by, order}})
@@ -127,7 +127,7 @@ export default class App extends Component {
   changeSorting = sorting => {
     const url = new URL(location.href)
     const params = url.searchParams
-    sorting.by !== this.state.sorting.by && params.set('sorting', sorting.by)
+    sorting.by !== this.state.sorting.by && params.set('sort', sorting.by)
     sorting.order !== this.state.sorting.order && params.set('order', sorting.order)
     route(url.pathname + url.search)
   }

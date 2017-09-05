@@ -1,5 +1,6 @@
 import { h, Component } from 'preact'
 import { Link } from 'preact-router'
+import { getDate } from './date-helpers'
 import css from './style.scss'
 
 export default class RepoCard extends Component {
@@ -44,7 +45,7 @@ export default class RepoCard extends Component {
             {stars}
           </div>
           <div>
-            Updated At: {updatedAt}
+            Updated At: {getDate(updatedAt)}
           </div>
           <div>
             {language}

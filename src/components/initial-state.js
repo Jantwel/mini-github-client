@@ -28,7 +28,7 @@ export default {
     [FILTERS.TYPE]: 'all'
   },
   sorting: {
-    by: [SEARCH_FIELDS.NAME],
+    by: SEARCH_FIELDS.NAME,
     order: 'asc'
   }
 }
