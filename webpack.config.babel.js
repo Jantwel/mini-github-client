@@ -103,6 +103,11 @@ module.exports = {
       template: './index.ejs',
       minify: { collapseWhitespace: true }
     }),
+    new HtmlWebpackPlugin({
+      template: './index.ejs',
+      filename: '404.html',
+      minify: { collapseWhitespace: true }
+    }),
     new CopyWebpackPlugin([
       { from: './manifest.json', to: './' },
       { from: './assets/favicon.ico', to: './' }
