@@ -1,6 +1,7 @@
 import { h, Component } from 'preact'
 import request from '../../services/request'
-import css from './style.css'
+import Loader from 'components/loader'
+import css from './style.scss'
 
 const getData = url => fetch(url).then(response => response.json())
 
@@ -96,7 +97,7 @@ export default class Dialog extends Component {
             X
           </button>
           {loading
-            ? <div>LOADING...</div>
+            ? <Loader />
             : <div>
               <h3 class={css.header}>
                 {repo && repo.full_name}

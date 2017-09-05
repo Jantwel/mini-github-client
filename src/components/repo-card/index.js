@@ -20,15 +20,16 @@ export default class RepoCard extends Component {
           {description}
         </p>
         <div class={css.additionalInfo}>
-          <div class={css.language}>
-            <span
-              class={css.languageColor}
-              style={{ backgroundColor: languagesColors[language] }}
-            />
-            <span>
-              {language}
-            </span>
-          </div>
+          {language &&
+            <div class={css.language}>
+              <span
+                class={css.languageColor}
+                style={{ backgroundColor: languagesColors[language] }}
+              />
+              <span>
+                {language}
+              </span>
+            </div>}
           <div class={css.stars}>
             <svg
               aria-label="star"

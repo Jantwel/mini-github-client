@@ -8,7 +8,8 @@ import {
   githubLinksParser,
   pickBy,
   createFilters,
-  buildFiltersUrl
+  buildFiltersUrl,
+  getLanguages
 } from '../util'
 import INITIAL_STATE, { FILTERS } from './initial-state'
 import css from './style.css'
@@ -28,7 +29,7 @@ export default class App extends Component {
   }
 
   syncFilters = event => {
-    const filtersProps = {
+    const filtersActions = {
       [FILTERS.HAS_OPEN_ISSUES]: type => event.attributes.hasOwnProperty(type),
       [FILTERS.HAS_TOPICS]: type => event.attributes.hasOwnProperty(type),
       [FILTERS.STARS]: type =>
@@ -41,7 +42,7 @@ export default class App extends Component {
         event.attributes[type] || INITIAL_STATE.filters[type]
     }
     const filters = Object.keys(this.state.filters).reduce((result, type) => {
-      return { ...result, [type]: filtersProps[type](type) }
+      return { ...result, [type]: filtersActions[type](type) }
     }, {})
     this.setState({ filters: { ...this.state.filters, ...filters } })
   }
@@ -91,7 +92,7 @@ export default class App extends Component {
       lastPage,
       currentPage: page,
       loading: false,
-      languages: this.getLanguages(repos)
+      languages: getLanguages(repos)
     })
   }
 
@@ -121,14 +122,6 @@ export default class App extends Component {
     params.delete('repo')
     route(url.pathname + url.search)
   }
-
-  getLanguages = repos =>
-    repos.reduce((result, { language }) => {
-      if (result.includes(language)) {
-        return result
-      }
-      return [...result, language]
-    }, [])
 
   filterRepo = repo => {
     const filters = createFilters(repo)

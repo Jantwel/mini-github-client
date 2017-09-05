@@ -1,4 +1,4 @@
-import {FILTERS} from 'components/initial-state'
+import { FILTERS } from 'components/initial-state'
 
 export const githubLinksParser = linkStr =>
   linkStr
@@ -42,6 +42,9 @@ export const createFilters = ({
     if (value === 'all') {
       return true
     }
+    if (!language && value === 'None') {
+      return true
+    }
     return language === value
   },
   [FILTERS.TYPE]: value => {
@@ -53,18 +56,31 @@ export const createFilters = ({
   }
 })
 
-
 export const buildFiltersUrl = (type, value) => {
   const url = new URL(location.href)
   const params = url.searchParams
-  const filters = {
-    [FILTERS.HAS_OPEN_ISSUES]: () => params.has(type) ? params.delete(type) : params.append(type, ''),
-    [FILTERS.HAS_TOPICS]: () => params.has(type) ? params.delete(type) : params.append(type, ''),
-    [FILTERS.STARS]: value => value ? params.set(type, value) :  params.delete(type),
-    [FILTERS.UPDATED_AT]: value => value ? params.set(type, value) :  params.delete(type),
-    [FILTERS.LANGUAGE]: value => value ? params.set(type, value) :  params.delete(type),
-    [FILTERS.TYPE]: value => value ? params.set(type, value) :  params.delete(type)
+  const filtersActions = {
+    [FILTERS.HAS_OPEN_ISSUES]: () =>
+      params.has(type) ? params.delete(type) : params.append(type, ''),
+    [FILTERS.HAS_TOPICS]: () =>
+      params.has(type) ? params.delete(type) : params.append(type, ''),
+    [FILTERS.STARS]: value =>
+      value ? params.set(type, value) : params.delete(type),
+    [FILTERS.UPDATED_AT]: value =>
+      value ? params.set(type, value) : params.delete(type),
+    [FILTERS.LANGUAGE]: value =>
+      value ? params.set(type, value) : params.delete(type),
+    [FILTERS.TYPE]: value =>
+      value ? params.set(type, value) : params.delete(type)
   }
-  filters[type](value)
+  filtersActions[type](value)
   return url
 }
+
+export const getLanguages = repos =>
+  repos.reduce((result, { language }) => {
+    if (result.includes(language)) {
+      return result
+    }
+    return [...result, language || 'None']
+  }, [])
