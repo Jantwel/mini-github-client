@@ -4,6 +4,8 @@ import css from './style.css'
 
 const getData = url => fetch(url).then(response => response.json())
 
+const getLanguageSize = (result, language) => result + language[1]
+
 export default class Dialog extends Component {
   constructor() {
     super()
@@ -44,8 +46,48 @@ export default class Dialog extends Component {
     document.removeEventListener('keydown', this.handlePressEscape)
   }
 
-  render({}, { loading, repo, contributors, pulls }) {
-    console.log('dialog props: ', this.props)
+  sortLanguages = (prev, next) => {
+    if (prev[1] < next[1]) {
+      return 1
+    }
+    if (prev[1] > next[1]) {
+      return -1
+    }
+    return 0
+  }
+
+  getLanguages = languages => {
+    const sortedLanguages = Object.entries(languages).sort(this.sortLanguages)
+    const fullSize = sortedLanguages.reduce(getLanguageSize, 0)
+
+    const mostUsedLanguages = sortedLanguages
+      .filter(([, value]) => value >= 1024)
+      .filter((item, index) => index < 6)
+
+    const otherLanguages = sortedLanguages
+      .slice(
+        sortedLanguages.indexOf(
+          mostUsedLanguages[mostUsedLanguages.length - 1]
+        ) + 1
+      )
+      .reduce(getLanguageSize, 0)
+
+    return [
+      ...mostUsedLanguages.map(([key, size]) => [
+        key,
+        (size / fullSize * 100).toFixed(1)
+      ]),
+      ['Other', (otherLanguages / fullSize * 100).toFixed(1)]
+    ]
+  }
+
+  render({}, { loading, repo, languages = [], contributors, pulls }) {
+    const filteredLanguages = this.getLanguages(languages)
+    console.log('dialog props: ', {
+      props: this.props,
+      state: this.state,
+      filteredLanguages
+    })
     return (
       <div class={css.dialogWrapper}>
         <div class={css.backcover} onClick={this.closeDialog} />
@@ -69,6 +111,20 @@ export default class Dialog extends Component {
                         </a>
                         <span>
                           Contributions: {contributions}
+                        </span>
+                      </div>
+                    )}
+              </div>
+              <div>
+                <h4>Languages</h4>
+                {filteredLanguages &&
+                    filteredLanguages.map(([name, size]) =>
+                      <div>
+                        <span>
+                          {name}
+                        </span>
+                        <span>
+                          Size: {size}
                         </span>
                       </div>
                     )}
