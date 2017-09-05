@@ -3,13 +3,27 @@ const configureData = ([body, headers]) => ({
   headers: { Link: headers.get('Link') }
 })
 
+const checkResponse = response => {
+  // const parsedResponse = parseResponse(response)
+  console.log('check response: ', response)
+  if (response.status === 404) {
+    return Promise.reject('Erorr. Not Found')
+  }
+
+  return Promise.all([response.json(), response.headers])
+}
+
 const request = (url, options = {}) =>
   fetch(url, {
     method: 'GET',
     headers: { Accept: 'application/vnd.github.mercy-preview+json' },
     ...options
   })
-    .then(response => Promise.all([response.json(), response.headers]))
+    .then(checkResponse)
     .then(configureData)
+    .catch(error => {
+      console.log('cath erorr: ', error)
+      return { body: [] }
+    })
 
 export default request

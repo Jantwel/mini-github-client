@@ -33,10 +33,11 @@ export default class Home extends Component {
     changeSorting,
     repo,
     closeRepo,
+    error,
     class: className
   }) {
-    return (
-      <div class={className}>
+    return !error
+      ? <div class={className}>
         <FilterPanel
           filters={filters}
           languages={languages}
@@ -46,6 +47,8 @@ export default class Home extends Component {
         <RepoStream repos={repos} openRepo={openRepo} />
         {repo && <Dialog name={name} repoName={repo} closeRepo={closeRepo} />}
       </div>
-    )
+      : <div>
+        <h1>Ooops! Something went wrong :(</h1>
+      </div>
   }
 }

@@ -21,7 +21,7 @@ export default class App extends Component {
 
   handleRoute = event => {
     console.log('change route', event)
-    if (event.current) {
+    if (event.current && !this.state.error) {
       this.setState({ username: event.current.attributes.name })
       this.syncFilters(event.current)
       this.syncSorting(event.current)
@@ -71,29 +71,37 @@ export default class App extends Component {
   ) => {
     this.setState({ loading: true })
 
-    const { body: repos, headers } =
-      this.getFromStorage(name) ||
-      (await request(`${SEARCH}/${name}/repos?page=${page}&per_page=60`))
+    try {
+      const { body: repos, headers } =
+        this.getFromStorage(name) ||
+        (await request(`${SEARCH}/${name}/repos?page=${page}&per_page=60`))
 
-    const lastPage = headers.Link ? githubLinksParser(headers.Link).last : 1
+      const lastPage = headers.Link ? githubLinksParser(headers.Link).last : 1
 
-    if (!this.state.lastPage && lastPage > 1) {
-      this.scrollListener = document.addEventListener(
-        'scroll',
-        this.handleLoadRepos
-      )
+      if (!this.state.lastPage && lastPage > 1) {
+        this.scrollListener = document.addEventListener(
+          'scroll',
+          this.handleLoadRepos
+        )
+      }
+
+      console.log('repos: ', repos, headers)
+
+      sessionStorage.setItem(`repos:${name}`, JSON.stringify(repos))
+
+      this.setState({
+        username: name,
+        repos: page === 1 ? repos : [...this.state.repos, ...repos],
+        lastPage,
+        currentPage: page,
+        loading: false,
+        languages: getLanguages(repos),
+        error: null
+      })
+    } catch (error) {
+      console.error('EEERORR: ', error)
+      this.setState({ error })
     }
-
-    sessionStorage.setItem(`repos:${name}`, JSON.stringify(repos))
-
-    this.setState({
-      username: name,
-      repos: page === 1 ? repos : [...this.state.repos, ...repos],
-      lastPage,
-      currentPage: page,
-      loading: false,
-      languages: getLanguages(repos)
-    })
   }
 
   handleLoadRepos = event => {
@@ -157,7 +165,7 @@ export default class App extends Component {
     return 0
   }
 
-  render({}, { username, repos, filters, languages, sorting }) {
+  render({}, { username, repos, filters, languages, sorting, error }) {
     console.log('app state: ', this.state)
     const filteredRepos = repos.filter(this.filterRepo).sort(this.sortRepo)
     return (
@@ -168,6 +176,7 @@ export default class App extends Component {
           <Home
             class={css.main}
             path="/:name"
+            error={error}
             repos={filteredRepos}
             fetchRepos={this.fetchRepos}
             filters={filters}
